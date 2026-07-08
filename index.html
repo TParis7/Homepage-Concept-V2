@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse of Perseverance — The Career Accelerator for the Next Generation</title>
+<meta name="description" content="P3 connects underserved students with vetted mentors, scholarships, and real opportunities. Free on mobile, deeper on the web.">
+
+<!-- Favicons — same assets as pulseofp3.org -->
+<link rel="shortcut icon" type="image/x-icon" href="https://cdn.prod.website-files.com/675870ff9815bae337f48fa1/6765b8349232edd376dae1c8_32.png">
+<link rel="apple-touch-icon" href="https://cdn.prod.website-files.com/675870ff9815bae337f48fa1/6765b82c3ededa4a4aee0044_256.png">
+
+<!--
+  ========================================================================
+  P3 HOMEPAGE REBUILD — Concept (NOT wired to Webflow, nothing live)
+  ========================================================================
+  Design notes:
+  - Follows the /platform page architecture exactly: when signed off, this
+    becomes a combined.js loaded via a small Webflow loader (same
+    build-combined.mjs pattern), replacing the Webflow-native homepage.
+  - Nav + Footer markup/styles copied VERBATIM from the /platform page
+    (which copied them from fs-combined.js, the pixel-parity source).
+  - Logo carousel (.lc-*) and community photo gallery (.gl-*) are
+    byte-for-byte the sections hp-shared-sections.js injects on the live
+    homepage today (same CDN image URLs, same animation).
+  - The old CSS "Dashboard Preview" mock is REPLACED by the real Client
+    Dashboard screenshot (shots/admin-dashboard.webp) in a browser frame.
+  - All product visuals are REAL screenshots from platform.pulseofp3.org
+    (demo mode, Jul 2026).
+  - AI surfaces use the soft-purple #6a4fb0 accent (product rule).
+  - Copy rules: no em-dashes; "+" before percentages (+90%), after
+    counts (1,000+).
+  ========================================================================
+-->
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<!-- Satoshi = Webflow's site-level body font; the live nav/footer inherit its
+     metrics (line-height 30px), so the standalone page loads it too -->
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', -apple-system, sans-serif; color: #1a1a1a; background: #fff; line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+img { max-width: 100%; display: block; }
+a { text-decoration: none; color: inherit; }
+
+:root {
+  --crimson: #D93A3A;
+  --crimson-dark: #B82E2E;
+  --maroon: #4A1020;
+  --maroon-deep: #2e0614;
+  --warm-gray: #FAF7F4;
+  --warm-gray-2: #F0EBE5;
+  --dark: #111;
+  --light-text: #666;
+  --ai-purple: #6a4fb0;
+  --radius: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --shadow-card: 0 8px 32px rgba(0,0,0,0.06);
+  --transition: 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ===================================================================== */
+/* NAV — copied verbatim from fs-combined.js (the pixel-parity source).   */
+/* ===================================================================== */
+.p3-nav, .pp-mob-overlay, .p3-footer { font-family: 'Satoshi', 'Inter', sans-serif; line-height: 30.006px; }
+.p3-nav { position: fixed; top: 0; left: 0; right: 0; height: auto; padding: 16px 40px; display: flex; align-items: center; justify-content: space-between; gap: 32px; background: transparent; transition: background 0.3s, box-shadow 0.3s, backdrop-filter 0.3s; z-index: 1000; }
+.p3-nav.scrolled { background: rgba(26, 26, 26, 0.95) !important; backdrop-filter: blur(20px) !important; box-shadow: 0 2px 20px rgba(0,0,0,0.15); }
+.p3-nav-logo { text-decoration: none; z-index: 10; }
+.p3-nav-logo-img { height: 36px; max-height: 36px; display: block; }
+.p3-nav-links { display: flex; align-items: center; gap: 32px; margin-left: auto; }
+.p3-nav-links a { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.85); text-decoration: none; transition: color 0.2s; }
+.p3-nav-links a:hover { color: #fff; }
+.p3-nav-cta { background: #D93A3A; color: #fff !important; padding: 10px 24px; border-radius: 50px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; text-decoration: none; transition: background 0.2s, transform 0.2s; margin-left: 0; }
+.p3-nav-cta:hover { background: #b52f2f; transform: translateY(-1px); }
+
+.pp-mob-menu { display: none; flex-direction: column; gap: 5px; cursor: pointer; z-index: 1001; background: none; border: none; padding: 0; }
+.pp-mob-menu span { width: 24px; height: 2.5px; background: #fff; border-radius: 2px; transition: all 0.3s; display: block; }
+.pp-mob-menu.open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+.pp-mob-menu.open span:nth-child(2) { opacity: 0; }
+.pp-mob-menu.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+
+.pp-home-desktop-hide { display: none; }
+
+.pp-mob-overlay { position: fixed; inset: 0; background-color: rgba(26, 10, 16, 0.97); z-index: 999; display: none; flex-direction: column; justify-content: center; align-items: center; gap: 28px; opacity: 0; transform: translateY(-100%); transition: opacity 0.3s, transform 0.3s; overflow-y: auto; }
+.pp-mob-overlay.open { display: flex !important; opacity: 1; transform: translateY(0); }
+.pp-mob-overlay-link, .pp-mob-overlay-cta { font-family: 'Inter', sans-serif; font-size: 1.25rem; font-weight: 500; color: #fff; opacity: 0.85; text-decoration: none; transition: color 0.2s; }
+.pp-mob-overlay-cta { opacity: 1; background: #D93A3A; color: #fff; padding: 12px 32px; border-radius: 100px; display: inline-block; text-align: center; margin-top: 8px; font-size: 1rem; font-weight: 600; }
+
+/* ===================================================================== */
+/* BROWSER FRAME — shared component for product screenshots               */
+/* ===================================================================== */
+.browser {
+  border-radius: 12px; overflow: hidden;
+  background: #16161a;
+  box-shadow: 0 24px 70px rgba(20,5,16,0.35), 0 4px 18px rgba(20,5,16,0.18);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.browser-bar {
+  height: 34px; display: flex; align-items: center; gap: 12px;
+  padding: 0 14px; background: #232329;
+}
+.browser-dots { display: flex; gap: 6px; flex: 0 0 auto; }
+.browser-dots span { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.16); }
+.browser-dots span:nth-child(1) { background: #e0564f; }
+.browser-dots span:nth-child(2) { background: #e0a33e; }
+.browser-dots span:nth-child(3) { background: #57a464; }
+.browser-url {
+  flex: 1; max-width: 320px; margin: 0 auto;
+  background: rgba(255,255,255,0.07); border-radius: 6px;
+  font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.55);
+  text-align: center; padding: 4px 14px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.browser img { width: 100%; display: block; }
+
+/* ===================================================================== */
+/* HERO — dual-device mockup                                              */
+/* ===================================================================== */
+.hero {
+  position: relative; min-height: 92vh;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a0510 0%, var(--maroon) 35%, #2a0a14 60%, #140510 100%);
+}
+/* Background watermark video — same asset + overlay gradient as the live
+   homepage hero (.w-background-video + .p3-hero-video-overlay). Renders
+   full-bleed at every breakpoint, exactly like the live mobile treatment. */
+.hero-video { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.hero-video video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero-video-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(26,5,16,0.82) 0%, rgba(74,16,32,0.72) 35%, rgba(42,10,20,0.78) 60%, rgba(20,5,16,0.85) 100%);
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0; z-index: 1;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 50%, rgba(217,58,58,0.10), transparent),
+    radial-gradient(ellipse 50% 60% at 80% 30%, rgba(74,16,32,0.14), transparent);
+  animation: heroGlow 8s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes heroGlow {
+  0% { opacity: 0.6; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1.05); }
+}
+.hero-inner {
+  position: relative; z-index: 2;
+  display: grid; grid-template-columns: 0.95fr 1.05fr; gap: 40px; align-items: center;
+  max-width: 1320px; width: 100%;
+  padding: 140px 48px 110px;
+}
+.hero h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(34px, 4.2vw, 56px); font-weight: 700;
+  line-height: 1.08; color: #fff; margin-bottom: 22px;
+  letter-spacing: -0.02em;
+}
+.hero h1 .highlight { color: var(--crimson); }
+.hero-text p.sub { font-size: 16px; color: rgba(255,255,255,0.75); max-width: 470px; margin-bottom: 32px; line-height: 1.65; }
+.hero-cta-row { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-bottom: 28px; }
+.btn-open {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--crimson); color: #fff;
+  padding: 15px 32px; border-radius: 100px;
+  font-weight: 600; font-size: 15px;
+  transition: opacity var(--transition), transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 12px 34px rgba(217,58,58,0.35);
+}
+.btn-open:hover { opacity: 0.92; transform: translateY(-2px); box-shadow: 0 16px 40px rgba(217,58,58,0.45); }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.08); color: #fff;
+  border: 1px solid rgba(255,255,255,0.25);
+  padding: 14px 28px; border-radius: 100px;
+  font-weight: 600; font-size: 15px;
+  transition: background var(--transition), transform var(--transition);
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+
+.hero-trust {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.6);
+}
+.hero-trust strong { color: #fff; font-weight: 700; }
+.hero-trust .dot { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.3); }
+.hero-trust .star { color: #E0A33E; }
+
+.hero-visual { position: relative; }
+.hero-visual::before {
+  content: ''; position: absolute; inset: 12% -8% -8% -8%;
+  background: radial-gradient(ellipse 70% 60% at 55% 50%, rgba(217,58,58,0.20), transparent 70%);
+  filter: blur(50px); z-index: 0; pointer-events: none;
+}
+.hero-devices {
+  position: relative; z-index: 1;
+  width: 112%; max-width: none; margin-left: -2%;
+  filter: drop-shadow(0 40px 80px rgba(0,0,0,0.5));
+  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.hero-visual:hover .hero-devices { transform: translateY(-6px); }
+
+/* ===================================================================== */
+/* SHARED SECTION BITS                                                    */
+/* ===================================================================== */
+.section-tag {
+  display: inline-block; padding: 6px 16px; border-radius: 50px;
+  font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px;
+}
+.tag-crimson { background: rgba(217,58,58,0.08); color: var(--crimson); }
+.tag-light { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
+.section-header { text-align: center; margin-bottom: 44px; }
+.section-header h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(28px, 3.4vw, 42px); font-weight: 700;
+  line-height: 1.15; max-width: 760px; margin: 0 auto;
+}
+.section-header h2 .accent { color: var(--crimson); }
+.section-header p { font-size: 16px; max-width: 600px; margin: 14px auto 0; line-height: 1.6; color: var(--light-text); }
+
+/* Feature pills on showcase rows */
+.feat-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
+  padding: 5px 13px; border-radius: 50px; margin-bottom: 16px;
+}
+.feat-pill.web { background: rgba(217,58,58,0.09); color: var(--crimson); }
+.feat-pill.ai { background: rgba(106,79,176,0.1); color: var(--ai-purple); }
+.feat-pill.maroon { background: rgba(74,16,32,0.08); color: var(--maroon); }
+
+/* ===================================================================== */
+/* LOGO CAROUSEL — byte-for-byte the live homepage section                */
+/* (hp-shared-sections.js .lc-* rules; --pp-* vars inlined)               */
+/* ===================================================================== */
+.lc-section{padding:28px 0;background:#fff;border-bottom:1px solid #eee;overflow:hidden;}
+.lc-label{text-align:center;font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#999;margin-bottom:18px;}
+.lc-wrap{position:relative;overflow:hidden;}
+.lc-track{display:flex;gap:48px;animation:lc-s 30s linear infinite;width:max-content;align-items:center;}.lc-track:hover{animation-play-state:paused;}
+.lc-track img{flex-shrink:0;opacity:.7;filter:grayscale(100%);transition:all .3s cubic-bezier(.25,.46,.45,.94);}.lc-track img:hover{opacity:1;filter:grayscale(0);}
+.lc-fl,.lc-fr{position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none;}
+.lc-fl{left:0;background:linear-gradient(90deg,#fff,transparent);}.lc-fr{right:0;background:linear-gradient(-90deg,#fff,transparent);}
+@keyframes lc-s{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ===================================================================== */
+/* WHY — compact stat-led gap section                                     */
+/* ===================================================================== */
+.why { background: var(--warm-gray); padding: 64px 48px; }
+.why-inner { max-width: 1100px; margin: 0 auto; }
+.why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.why-card {
+  background: #fff; border-radius: var(--radius-lg);
+  padding: 30px 28px 28px; text-align: center;
+  box-shadow: 0 2px 10px rgba(74,16,32,0.05);
+  transition: all var(--transition);
+}
+.why-card:hover { transform: translateY(-5px); box-shadow: 0 18px 44px rgba(74,16,32,0.10); }
+.why-card .num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 52px; font-weight: 700; line-height: 1;
+  color: var(--crimson); letter-spacing: -0.02em; margin-bottom: 10px;
+}
+.why-card p { font-size: 14.5px; color: var(--light-text); line-height: 1.55; max-width: 260px; margin: 0 auto; }
+.why-card p strong { color: #333; font-weight: 600; }
+.why-foot { text-align: center; margin-top: 32px; font-size: 15px; color: var(--light-text); }
+.why-foot strong { color: var(--dark); font-weight: 600; }
+
+/* ===================================================================== */
+/* SHOWCASE ROWS — real product screenshots                               */
+/* ===================================================================== */
+.showcase { background: #fff; padding: 64px 48px 24px; position: relative; overflow: hidden; }
+.showcase-inner { max-width: 1240px; margin: 0 auto; position: relative; z-index: 1; }
+.fr {
+  display: grid; grid-template-columns: 1fr 1.15fr; gap: 64px; align-items: center;
+  padding: 40px 0;
+}
+.fr + .fr { border-top: 1px solid rgba(74,16,32,0.07); }
+.fr.flip { grid-template-columns: 1.15fr 1fr; }
+.fr.flip .fr-copy { order: 2; }
+.fr.flip .fr-visual { order: 1; }
+.fr h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(24px, 2.6vw, 32px); font-weight: 700; color: var(--dark);
+  line-height: 1.15; margin-bottom: 14px; letter-spacing: -0.01em;
+}
+.fr h3 .accent { color: var(--crimson); }
+.fr p.lede { font-size: 15.5px; color: var(--light-text); line-height: 1.65; margin-bottom: 20px; max-width: 470px; }
+.fr ul { list-style: none; display: flex; flex-direction: column; gap: 11px; text-align: left; }
+.fr ul li {
+  display: flex; gap: 11px; align-items: flex-start;
+  font-size: 14px; color: #333; line-height: 1.5;
+}
+.fr ul li svg { width: 17px; height: 17px; flex: 0 0 auto; margin-top: 2.5px; color: var(--crimson); }
+.fr.ai-row ul li svg { color: var(--ai-purple); }
+.fr ul li strong { font-weight: 600; color: inherit; }
+.fr-visual { position: relative; }
+.fr-visual::before {
+  content: ''; position: absolute; inset: 14% -4% -6% -4%;
+  background: radial-gradient(ellipse 70% 60% at 50% 55%, rgba(74,16,32,0.13), transparent 70%);
+  filter: blur(38px); pointer-events: none;
+}
+.fr.ai-row .fr-visual::before { background: radial-gradient(ellipse 70% 60% at 50% 55%, rgba(106,79,176,0.16), transparent 70%); }
+.fr-visual .browser { position: relative; }
+.showcase .fr-visual .browser { max-width: 88%; margin-left: auto; margin-right: auto; }
+
+/* ===================================================================== */
+/* AUDIENCE CARDS — who it's for                                          */
+/* ===================================================================== */
+.aud { background: var(--warm-gray); padding: 64px 48px; }
+.aud-inner { max-width: 1240px; margin: 0 auto; }
+.aud-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.aud-card {
+  background: #fff;
+  border-radius: var(--radius-lg); overflow: hidden;
+  box-shadow: 0 2px 10px rgba(74,16,32,0.05);
+  transition: all var(--transition);
+  display: flex; flex-direction: column;
+}
+.aud-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(74,16,32,0.12); }
+.aud-card .ac-vis { position: relative; aspect-ratio: 16 / 9.2; overflow: hidden; background: var(--warm-gray-2); }
+.aud-card .ac-vis img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+.aud-card .ac-vis::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(74,16,32,0.10) 100%);
+  pointer-events: none;
+}
+.aud-card .ac-body { padding: 20px 22px 24px; display: flex; flex-direction: column; flex: 1; }
+.aud-card h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 19px; font-weight: 700; color: var(--dark);
+  line-height: 1.25; margin-bottom: 8px;
+}
+.aud-card p { font-size: 14px; color: var(--light-text); line-height: 1.55; margin-bottom: 16px; }
+.aud-card .ac-link {
+  margin-top: auto;
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 13.5px; font-weight: 600; color: var(--crimson);
+  transition: gap 0.25s;
+}
+.aud-card:hover .ac-link { gap: 11px; }
+.aud-card .ac-link svg { width: 15px; height: 15px; }
+
+/* ===================================================================== */
+/* INSTITUTIONS BAND — real Client Dashboard, dark maroon                 */
+/* ===================================================================== */
+.inst { background: linear-gradient(135deg, var(--maroon-deep) 0%, var(--maroon) 55%, var(--maroon-deep) 100%); padding: 64px 48px; position: relative; overflow: hidden; }
+.inst::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 55% 70% at 80% 50%, rgba(217,58,58,0.16), transparent 70%);
+  pointer-events: none;
+}
+.inst-inner {
+  max-width: 1240px; margin: 0 auto; position: relative; z-index: 1;
+  display: grid; grid-template-columns: 1fr 1.15fr; gap: 64px; align-items: center;
+}
+.inst h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(26px, 3vw, 38px); font-weight: 700;
+  line-height: 1.15; color: #fff; margin-bottom: 14px;
+}
+.inst h2 .accent { color: var(--crimson); }
+.inst p.lede { font-size: 15.5px; color: rgba(255,255,255,0.72); line-height: 1.65; margin-bottom: 22px; max-width: 470px; }
+.inst ul { list-style: none; display: flex; flex-direction: column; gap: 11px; text-align: left; margin-bottom: 28px; }
+.inst ul li { display: flex; gap: 11px; align-items: flex-start; font-size: 14px; color: rgba(255,255,255,0.85); line-height: 1.5; }
+.inst ul li svg { width: 17px; height: 17px; flex: 0 0 auto; margin-top: 2.5px; color: var(--crimson); }
+.inst ul li strong { font-weight: 600; color: inherit; }
+.btn-outline {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: transparent; color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.4);
+  padding: 12px 26px; border-radius: 100px;
+  font-weight: 600; font-size: 14px;
+  transition: all var(--transition);
+}
+.btn-outline:hover { border-color: var(--crimson); color: #fff; background: rgba(217,58,58,0.18); transform: translateY(-2px); }
+
+/* ===================================================================== */
+/* PRESS + COMMUNITY — one section: big press logos + quote + the photo   */
+/* carousel. Background watermark = the live homepage press treatment     */
+/* (group.jpeg under the same white 135deg veil).                         */
+/* ===================================================================== */
+.press {
+  padding: 64px 0 52px; position: relative; overflow: hidden;
+  background-image:
+    linear-gradient(135deg, rgba(255,255,255,0.92) 0%, rgba(250,247,244,0.88) 50%, rgba(255,255,255,0.92) 100%),
+    url("https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b04a494d83c9411f210e71_group.jpeg");
+  background-size: cover, cover;
+  background-position: 50% 50%, 50% 50%;
+  background-repeat: no-repeat, no-repeat;
+  background-color: var(--warm-gray);
+}
+.press-inner { max-width: 1100px; margin: 0 auto; text-align: center; padding: 0 48px; }
+.press-logos {
+  display: flex; justify-content: center; align-items: center;
+  gap: 16px; flex-wrap: wrap; margin-bottom: 36px;
+}
+/* frosted white chips behind each logo — like the live press cards; keeps
+   the marks legible over the photo watermark */
+.press-chip {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 15px 22px; border-radius: 16px;
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.9);
+  box-shadow: 0 8px 24px rgba(74,16,32,0.08);
+  transition: all var(--transition);
+}
+.press-chip:hover { background: rgba(255,255,255,0.96); transform: translateY(-3px); box-shadow: 0 14px 34px rgba(74,16,32,0.12); }
+.press-logos img {
+  height: 50px; width: auto;
+  opacity: 0.85; filter: grayscale(100%);
+  transition: all var(--transition);
+}
+/* the logo PNGs aren't standardized (different internal padding), so some
+   marks need per-logo sizing to read at the same visual weight */
+.press-logos img[alt="The New York Times"] { height: 82px; margin: -16px 0; }
+.press-chip:hover img { opacity: 1; filter: grayscale(0); }
+.press-quote {
+  max-width: 760px; margin: 0 auto;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(17px, 2vw, 21px); font-weight: 500; line-height: 1.5;
+  color: #333;
+}
+.press-quote .accent { color: var(--crimson); }
+.press-attr { margin-top: 14px; font-size: 13px; color: var(--light-text); }
+
+/* Community carousel inside the press section — same .gl-track/.gl-item
+   markup + animation as the live homepage gallery; wrapper restyled for
+   the light watermark background. */
+.gl-wrap{position:relative;overflow:hidden;margin-top:48px;}.gl-track{display:flex;gap:12px;animation:gl-s 70s linear infinite;width:max-content;}.gl-track:hover{animation-play-state:paused;}
+.gl-item{width:280px;height:185px;border-radius:14px;overflow:hidden;flex-shrink:0;background:rgba(0,0,0,.05);box-shadow:0 10px 28px rgba(74,16,32,0.12);}.gl-item img{width:100%;height:100%;object-fit:cover;}
+.gl-fl,.gl-fr{position:absolute;top:0;bottom:0;width:50px;z-index:2;pointer-events:none;}
+.gl-fl{left:0;background:linear-gradient(90deg,rgba(252,250,247,0.95),transparent);}.gl-fr{right:0;background:linear-gradient(-90deg,rgba(252,250,247,0.95),transparent);}
+@keyframes gl-s{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.gl-film { text-align: center; margin-top: 26px; }
+.gl-film a {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-size: 14px; font-weight: 600; color: #333;
+  transition: color 0.2s;
+}
+.gl-film a:hover { color: var(--crimson); }
+.gl-film a svg { width: 16px; height: 16px; color: var(--crimson); }
+
+/* ===================================================================== */
+/* FINAL CTA                                                              */
+/* ===================================================================== */
+.final-cta {
+  background: linear-gradient(135deg, var(--maroon-deep) 0%, var(--maroon) 50%, var(--maroon-deep) 100%);
+  padding: 72px 48px; text-align: center; color: #fff; position: relative; overflow: hidden;
+}
+.final-cta::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 70% at 50% 40%, rgba(217,58,58,0.15), transparent 70%);
+  pointer-events: none;
+}
+.final-cta-inner { max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
+.final-cta h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(30px, 3.6vw, 46px); font-weight: 700;
+  line-height: 1.12; color: #fff; margin-bottom: 18px; letter-spacing: -0.02em;
+}
+.final-cta h2 .highlight { color: var(--crimson); }
+.final-cta p.sub { font-size: 16px; color: rgba(255,255,255,0.7); max-width: 540px; margin: 0 auto 34px; line-height: 1.6; }
+.store-badges { display: flex; gap: 14px; justify-content: center; align-items: center; margin-bottom: 30px; }
+.store-badges img { height: 48px; width: auto; display: block; }
+.store-badges a { transition: transform var(--transition); }
+.store-badges a:hover { transform: translateY(-2px); }
+.final-partner { font-size: 14px; color: rgba(255,255,255,0.55); }
+.final-partner a {
+  color: #fff; font-weight: 600;
+  text-decoration: underline; text-underline-offset: 3px;
+  transition: color var(--transition);
+}
+.final-partner a:hover { color: var(--crimson); }
+
+/* ===================================================================== */
+/* FOOTER — copied verbatim from fs-combined.js (the pixel-parity source) */
+/* ===================================================================== */
+.p3-footer { background: #0a0a0a; padding: 64px 40px 32px; color: #fff; }
+.p3-footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; max-width: 1180px; margin: 0 auto; }
+.p3-footer-brand p { color: rgba(255,255,255,0.5); font-size: 0.85rem; line-height: 1.6; margin-top: 12px; }
+.p3-footer-logo { height: 36px; margin-bottom: 8px; }
+.p3-footer-tagline { color: rgba(255,255,255,0.5); font-size: 13px; line-height: 1.6; margin-top: 12px; }
+.p3-footer-location { color: rgba(255,255,255,0.5); font-size: 13px; margin-top: 4px; }
+.p3-footer-col-title { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.8); margin-bottom: 16px; }
+.p3-footer-col { display: flex; flex-direction: column; gap: 10px; }
+.p3-footer-link { color: rgba(255,255,255,0.6); font-size: 13px; text-decoration: none; transition: color 0.2s; }
+.p3-footer-link:hover { color: #fff; }
+.p3-footer-bottom { margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.08); }
+
+/* ===================================================================== */
+/* RESPONSIVE                                                             */
+/* ===================================================================== */
+
+@media (max-width: 1100px) {
+  .hero-inner { grid-template-columns: 1fr; gap: 40px; text-align: center; padding: 130px 32px 80px; }
+  .hero-text p.sub { margin-left: auto; margin-right: auto; }
+  .hero-cta-row, .hero-trust { justify-content: center; }
+  .hero-devices { width: 100%; margin-left: 0; }
+
+  .fr, .fr.flip { grid-template-columns: 1fr; gap: 32px; padding: 44px 0; }
+  .fr.flip .fr-copy { order: 1; }
+  .fr.flip .fr-visual { order: 2; }
+  .fr p.lede { max-width: 620px; }
+
+  .why-grid { grid-template-columns: 1fr; gap: 14px; max-width: 480px; margin: 0 auto; }
+  .aud-grid { grid-template-columns: 1fr; gap: 14px; max-width: 480px; margin: 0 auto; }
+  .inst-inner { grid-template-columns: 1fr; gap: 40px; }
+  .inst-copy { order: 1; }
+  .inst .fr-visual { order: 2; }
+}
+
+/* ≤991px — mobile nav, values from fs-combined.js */
+@media (max-width: 991px) {
+  /* Like the live homepage: no device mockup in the hero on mobile
+     (live hides .p3-hero-phone-wrap) — the video watermark carries it */
+  .hero-visual { display: none; }
+  .hero-inner { gap: 0; }
+  .p3-nav-links, .p3-nav-cta { display: none !important; }
+  .p3-nav { padding: 16px !important; height: 64px !important; }
+  .p3-nav .p3-nav-logo-img { max-height: 36px !important; height: 36px !important; }
+  .pp-mob-menu { display: flex; }
+  .pp-home-desktop-hide { display: block; }
+}
+
+@media (max-width: 768px) {
+  /* taller mobile hero like the live homepage — the video watermark fills
+     most of the first screen with the content vertically centered */
+  .hero { min-height: 92vh; }
+  .hero-inner { padding: 120px 20px 64px; gap: 36px; }
+  .hero h1 { font-size: clamp(27px, 7.4vw, 36px); line-height: 1.08; margin-bottom: 16px; }
+  .hero-text p.sub { font-size: 14px; margin-bottom: 24px; }
+  .btn-open { padding: 14px 28px; font-size: 14px; }
+  .btn-ghost { padding: 13px 24px; font-size: 14px; }
+  .hero-trust { gap: 10px; font-size: 12px; }
+
+  .why { padding: 48px 16px; }
+  .why-card { padding: 24px 22px 22px; }
+  .why-card .num { font-size: 38px; }
+  .why-card p { font-size: 13.5px; }
+  .why-foot { display: none; }
+
+  .showcase { padding: 48px 16px 16px; }
+  .section-header { margin-bottom: 28px; }
+  .section-header h2 { font-size: clamp(23px, 6vw, 28px); }
+  .section-header p { font-size: 13.5px; }
+
+  .fr { padding: 32px 0; }
+  .fr-copy { text-align: center; }
+  .fr .feat-pill { margin-left: auto; margin-right: auto; }
+  .fr h3 { font-size: clamp(22px, 5.8vw, 27px); }
+  .fr p.lede { font-size: 13.5px; margin-left: auto; margin-right: auto; }
+  .fr ul { max-width: 420px; margin: 0 auto; text-align: left; }
+  .fr ul li { font-size: 13px; }
+  /* screenshot width matches the /platform page's 4 feature rows */
+  .showcase .fr-visual .browser { max-width: 80%; }
+
+  /* Audience cards collapse to compact horizontal rows (like the /demos
+     launcher on mobile) — photo left, copy right, minimal scroll cost */
+  .aud { padding: 48px 16px; }
+  .aud-grid { gap: 12px; max-width: 480px; }
+  .aud-card { display: grid; grid-template-columns: 122px 1fr; }
+  .aud-card .ac-vis { aspect-ratio: auto; height: 100%; min-height: 124px; }
+  .aud-card .ac-body { padding: 14px 16px 13px; }
+  .aud-card h3 { font-size: 16px; margin-bottom: 4px; }
+  .aud-card p { font-size: 12.5px; margin-bottom: 10px; }
+  .aud-card .ac-link { font-size: 12.5px; }
+
+  .inst { padding: 48px 20px; }
+  .inst-copy { text-align: center; }
+  .inst-copy .section-tag { margin-left: auto; margin-right: auto; }
+  .inst h2 { font-size: clamp(23px, 6vw, 28px); }
+  .inst p.lede { font-size: 13.5px; margin-left: auto; margin-right: auto; }
+  .inst ul { max-width: 420px; margin: 0 auto 26px; text-align: left; }
+
+  .press { padding: 48px 0 40px; }
+  .press-inner { padding: 0 20px; }
+  .press-logos { gap: 12px; margin-bottom: 0; }
+  .press-chip { padding: 11px 18px; border-radius: 13px; }
+  .press-logos img { height: 34px; }
+  .press-logos img[alt="The New York Times"] { height: 56px; margin: -11px 0; }
+  .press-quote, .press-attr { display: none; }
+  .gl-wrap { margin-top: 32px; }
+
+  .final-cta { padding: 56px 20px; }
+  .final-cta h2 { font-size: clamp(25px, 6.8vw, 32px); }
+  .final-cta p.sub { font-size: 13.5px; }
+  .store-badges img { height: 42px; }
+
+  /* Footer mobile — values from fs-combined.js */
+  .p3-footer-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 24px 16px !important; }
+  .p3-footer-brand { grid-column: 1 / -1; }
+  .p3-footer-bottom { flex-wrap: wrap; justify-content: center; text-align: center; }
+}
+
+@media (max-width: 420px) {
+  .hero-inner { padding: 100px 16px 52px; }
+  .hero h1 { font-size: clamp(28px, 9vw, 36px); }
+  .hero-cta-row { flex-direction: column; width: 100%; }
+  .btn-open, .btn-ghost { width: 100%; justify-content: center; }
+  .showcase, .final-cta { padding-left: 14px; padding-right: 14px; }
+  .store-badges { flex-direction: row; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero::before { animation: none !important; }
+  .lc-track, .gl-track { animation: none !important; }
+  * { transition-duration: 0.01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== NAV — identical to the live site (fs-combined.js source) ===== -->
+<div class="p3-nav" id="p3nav">
+  <a href="https://pulseofp3.org/" class="p3-nav-logo">
+    <img src="https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b02f65f0068e9fb16f0df1_P3%20Logo.svg" alt="P3 - Pulse of Perseverance" class="p3-nav-logo-img">
+  </a>
+  <div class="p3-nav-links">
+    <a href="https://pulseofp3.org/" class="pp-home-desktop-hide">Home</a>
+    <a href="https://pulseofp3.org/for-students" class="p3-nav-link">For Students</a>
+    <a href="https://pulseofp3.org/partner" class="p3-nav-link">For Institutions</a>
+    <a href="https://pulseofp3.org/for-mentors" class="p3-nav-link">For Mentors</a>
+    <a href="https://pulseofp3.org/about/about" class="p3-nav-link">About</a>
+  </div>
+  <a href="https://pulseofp3.org/download" class="p3-nav-cta">Get the App</a>
+  <button class="pp-mob-menu" id="ppMobMenu" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+
+<!-- Mobile fullscreen overlay menu -->
+<div class="pp-mob-overlay" id="ppMobOverlay">
+  <a class="pp-mob-overlay-link" href="https://pulseofp3.org/">Home</a>
+  <a class="pp-mob-overlay-link" href="https://pulseofp3.org/for-students">For Students</a>
+  <a class="pp-mob-overlay-link" href="https://pulseofp3.org/partner">For Institutions</a>
+  <a class="pp-mob-overlay-link" href="https://pulseofp3.org/for-mentors">For Mentors</a>
+  <a class="pp-mob-overlay-link" href="https://pulseofp3.org/about/about">About</a>
+  <a class="pp-mob-overlay-cta" href="https://pulseofp3.org/download">Get the App</a>
+</div>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-video" aria-hidden="true">
+    <video autoplay loop muted playsinline poster="https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7%2F69b04a6712d5fdbe9b4e51f8_p3-hero-bg_poster.0000000.jpg">
+      <source src="https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7%2F69b04a6712d5fdbe9b4e51f8_p3-hero-bg_mp4.mp4" type="video/mp4">
+      <source src="https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7%2F69b04a6712d5fdbe9b4e51f8_p3-hero-bg_webm.webm" type="video/webm">
+    </video>
+    <div class="hero-video-overlay"></div>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <h1>The career accelerator for the <span class="highlight">next generation.</span></h1>
+      <p class="sub">P3 connects underserved students with vetted mentors, scholarships, and real opportunities. Free on mobile, deeper on the web.</p>
+      <div class="hero-cta-row">
+        <a href="https://pulseofp3.org/download" class="btn-open">Download Free App</a>
+        <a href="https://www.pulseofp3.org/platform" class="btn-ghost">Explore the Web App</a>
+      </div>
+      <div class="hero-trust">
+        <span><span class="star">&#9733;</span> <strong>4.9</strong> App Store</span>
+        <span class="dot"></span>
+        <span><strong>1,000+</strong> users connected</span>
+        <span class="dot"></span>
+        <span><strong>20+</strong> partner organizations</span>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <img class="hero-devices" src="images/hero-devices.webp" alt="The P3 platform on a MacBook and iPhone" fetchpriority="high">
+    </div>
+  </div>
+</section>
+
+<!-- ===== LOGO CAROUSEL — identical to the live homepage section ===== -->
+<section class="lc-section">
+  <div class="lc-label">Trusted by leading institutions</div>
+  <div class="lc-wrap"><div class="lc-fl"></div><div class="lc-fr"></div><div class="lc-track"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/csu.png" alt="Chicago State University" style="height:32px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/xavier.png" alt="Xavier University" style="height:32px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/langston.png" alt="Langston University" style="height:36px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/nyu.png" alt="New York University" style="height:32px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/google.png" alt="Google" style="height:32px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/lsu.png" alt="Louisiana State University" style="height:32px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/mbk.png" alt="My Brother's Keeper" style="height:36px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/project-hood.png" alt="Project H.O.O.D." style="height:36px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/cps.png" alt="Chicago Public Schools" style="height:36px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/100bm.png" alt="100 Black Men" style="height:36px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/gilead.png" alt="Gilead Sciences" style="height:36px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/lurie.png" alt="Lurie Children's Hospital" style="height:36px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/csu.png" alt="Chicago State University" style="height:32px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/xavier.png" alt="Xavier University" style="height:32px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/langston.png" alt="Langston University" style="height:36px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/nyu.png" alt="New York University" style="height:32px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/google.png" alt="Google" style="height:32px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/lsu.png" alt="Louisiana State University" style="height:32px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/mbk.png" alt="My Brother's Keeper" style="height:36px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/project-hood.png" alt="Project H.O.O.D." style="height:36px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/cps.png" alt="Chicago Public Schools" style="height:36px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/100bm.png" alt="100 Black Men" style="height:36px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/gilead.png" alt="Gilead Sciences" style="height:36px;width:auto;" loading="lazy"><img src="https://tparis7.github.io/Mentor-Page-Redesign/logos/lurie.png" alt="Lurie Children's Hospital" style="height:36px;width:auto;" loading="lazy"></div></div>
+</section>
+
+<!-- ===== WHY — the gap, told in three numbers ===== -->
+<section class="why">
+  <div class="why-inner">
+    <div class="section-header">
+      <span class="section-tag tag-crimson">Why P3 exists</span>
+      <h2>Ambition isn't the gap. <span class="accent">Access is.</span></h2>
+      <p>The next generation isn't short on talent. It's short on the mentors, networks, and guidance that turn potential into a career.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="num">30%</div>
+        <p>of students have <strong>regular access to a mentor</strong></p>
+      </div>
+      <div class="why-card">
+        <div class="num">85%</div>
+        <p>of jobs are filled through <strong>professional networks</strong></p>
+      </div>
+      <div class="why-card">
+        <div class="num">5x</div>
+        <p>more likely to succeed <strong>with a mentor in their corner</strong></p>
+      </div>
+    </div>
+    <p class="why-foot"><strong>P3 closes the gap</strong> with a free platform that puts a vetted mentor, a real network, and a clear pathway in every student's pocket.</p>
+  </div>
+</section>
+
+<!-- ===== SHOWCASE — real product, three rows ===== -->
+<section class="showcase">
+  <div class="showcase-inner">
+    <div class="section-header">
+      <span class="section-tag tag-crimson">The Platform</span>
+      <h2>One platform for the <span class="accent">whole journey.</span></h2>
+      <p>From first question to first job: mentorship, opportunity, and momentum in one place, on the app and on the web.</p>
+    </div>
+
+    <!-- 1. Smart Match -->
+    <div class="fr ai-row" id="fr-match">
+      <div class="fr-copy">
+        <span class="feat-pill ai">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>
+          AI Smart Match
+        </span>
+        <h3>AI finds the <span class="accent">right mentor.</span></h3>
+        <p class="lede">Smart Match pairs each student with a vetted professional across 12+ signals: industry, identity, experience, and where they're headed next.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>Every mentor vetted</strong> and manually approved by P3</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>Video answers</strong> to real career questions</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>Matches that stick:</strong> +90% match retention</span></li>
+        </ul>
+      </div>
+      <div class="fr-visual">
+        <div class="browser">
+          <div class="browser-bar">
+            <div class="browser-dots"><span></span><span></span><span></span></div>
+            <div class="browser-url">platform.pulseofp3.org/mentors</div>
+          </div>
+          <img src="shots/find-mentor.webp" alt="Find a Mentor: the vetted P3 mentor community" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Opportunities -->
+    <div class="fr flip" id="fr-opps">
+      <div class="fr-copy">
+        <span class="feat-pill web">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+          Opportunities
+        </span>
+        <h3>Scholarships. Internships. <span class="accent">Jobs.</span></h3>
+        <p class="lede">A curated opportunity feed with real deadlines and one-tap apply, plus monthly P3 scholarships awarded to ambitious students.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>120+ live opportunities</strong> curated for where students are going</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>Monthly scholarships</strong> awarded by P3</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>Posted by mentors</strong> from their own networks</span></li>
+        </ul>
+      </div>
+      <div class="fr-visual">
+        <div class="browser">
+          <div class="browser-bar">
+            <div class="browser-dots"><span></span><span></span><span></span></div>
+            <div class="browser-url">platform.pulseofp3.org/opportunities</div>
+          </div>
+          <img src="shots/opportunities.webp" alt="Opportunities: scholarships, internships, and jobs" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Milestones -->
+    <div class="fr" id="fr-milestones">
+      <div class="fr-copy">
+        <span class="feat-pill maroon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+          Milestones
+        </span>
+        <h3>Progress you can <span class="accent">see.</span></h3>
+        <p class="lede">The Mentee Milestone Framework turns the long climb to opportunity into a clear, achievable pathway, tracked from high school to first job.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>Guided pathways</strong> with checkpoints students can act on</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>Synced everywhere:</strong> one journey across app and web</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>Mentors see progress</strong> and know exactly when to step in</span></li>
+        </ul>
+      </div>
+      <div class="fr-visual">
+        <div class="browser">
+          <div class="browser-bar">
+            <div class="browser-dots"><span></span><span></span><span></span></div>
+            <div class="browser-url">platform.pulseofp3.org/milestones</div>
+          </div>
+          <img src="shots/milestones-crop.webp" alt="Milestones: the full pathway journey on one screen" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== AUDIENCE CARDS ===== -->
+<section class="aud">
+  <div class="aud-inner">
+    <div class="section-header">
+      <span class="section-tag tag-crimson">Who it's for</span>
+      <h2>Built for every side of <span class="accent">the mission.</span></h2>
+    </div>
+    <div class="aud-grid">
+      <a class="aud-card" href="https://pulseofp3.org/for-students">
+        <div class="ac-vis"><img src="images/demos-mentee.jpg" alt="A P3 student" loading="lazy"></div>
+        <div class="ac-body">
+          <h3>Students</h3>
+          <p>Free mentorship, scholarships, and a network that opens doors, from the first question to the first job.</p>
+          <span class="ac-link">For Students
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </span>
+        </div>
+      </a>
+      <a class="aud-card" href="https://pulseofp3.org/for-mentors">
+        <div class="ac-vis"><img src="images/demos-mentor.jpg" alt="A P3 mentor" loading="lazy" style="object-position: 50% 30%;"></div>
+        <div class="ac-body">
+          <h3>Mentors</h3>
+          <p>Give back on your own schedule: answer questions, guide pathways, and change trajectories.</p>
+          <span class="ac-link">For Mentors
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </span>
+        </div>
+      </a>
+      <a class="aud-card" href="https://pulseofp3.org/partner">
+        <div class="ac-vis"><img src="images/demos-admin.jpg" alt="A partner institution administrator" loading="lazy" style="object-position: 50% 30%;"></div>
+        <div class="ac-body">
+          <h3>Institutions</h3>
+          <p>Turn mentorship engagement into measurable outcomes with a real-time Client Dashboard.</p>
+          <span class="ac-link">For Institutions
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== INSTITUTIONS — real Client Dashboard ===== -->
+<section class="inst">
+  <div class="inst-inner">
+    <div class="inst-copy">
+      <span class="section-tag tag-light">For Institutions</span>
+      <h2>Student journeys become <span class="accent">institutional intelligence.</span></h2>
+      <p class="lede">Partner institutions get a live Client Dashboard on the same platform students already use, no LMS integration required.</p>
+      <ul>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>Cohort engagement</strong> and mentorship activity in real time</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>Milestone and retention analytics</strong> across every student</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>Longitudinal outcomes</strong> that prove mentorship works</span></li>
+      </ul>
+      <a href="https://pulseofp3.org/partner" class="btn-outline">
+        Partner with P3
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+    </div>
+    <div class="fr-visual">
+      <div class="browser">
+        <div class="browser-bar">
+          <div class="browser-dots"><span></span><span></span><span></span></div>
+          <div class="browser-url">platform.pulseofp3.org/admin</div>
+        </div>
+        <img src="shots/admin-dashboard.webp" alt="The Client Dashboard: cohort analytics for partner institutions" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRESS + COMMUNITY (merged) ===== -->
+<section class="press">
+  <div class="press-inner">
+    <div class="section-header" style="margin-bottom:36px;">
+      <span class="section-tag tag-crimson">In the press</span>
+      <h2>Making <span class="accent">Headlines</span></h2>
+    </div>
+    <div class="press-logos">
+      <span class="press-chip"><img src="press-logos/abc-news.png" alt="ABC News" loading="lazy"></span>
+      <span class="press-chip"><img src="press-logos/new-york-times.png" alt="The New York Times" loading="lazy"></span>
+      <span class="press-chip"><img src="press-logos/today-show.png" alt="TODAY Show" loading="lazy"></span>
+      <span class="press-chip"><img src="press-logos/adweek-nyc.png" alt="Advertising Week New York" loading="lazy"></span>
+      <span class="press-chip"><img src="press-logos/versus.png" alt="VERSUS" loading="lazy"></span>
+      <span class="press-chip"><img src="press-logos/sixdegrees.png" alt="6Degrees.org" loading="lazy"></span>
+    </div>
+    <p class="press-quote">&ldquo;P3 is building what should have existed decades ago: a platform that connects talent with opportunity <span class="accent">regardless of zip code.</span>&rdquo;</p>
+    <p class="press-attr">Featured in national media coverage</p>
+  </div>
+
+  <!-- Community photo carousel — same track/items as the live homepage gallery -->
+  <div class="gl-wrap"><div class="gl-fl"></div><div class="gl-fr"></div><div class="gl-track">
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/224A1273_Original.jpg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Copy%20of%20Copy%20of%20P3_Gala2025_0193.jpg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/_P3_4718.jpg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/P3_Gala2025_0425.jpg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/IMG_7919.jpg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Copy%20of%20Versus_P3_20260910-IMG9096_MollJeanNye.jpg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/IMG_6982.jpg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Copy%20of%20P3_Gala2025_0065.jpg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Doctors%20Park.jpg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/group.jpeg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Copy%20of%20_P3_4641.jpg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Copy%20of%20Versus_P3_20260910-IMG9479_MollJeanNye.jpg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/224A1273_Original.jpg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Copy%20of%20Copy%20of%20P3_Gala2025_0193.jpg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/_P3_4718.jpg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/P3_Gala2025_0425.jpg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/IMG_7919.jpg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Copy%20of%20Versus_P3_20260910-IMG9096_MollJeanNye.jpg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/IMG_6982.jpg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Copy%20of%20P3_Gala2025_0065.jpg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Doctors%20Park.jpg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/group.jpeg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Copy%20of%20_P3_4641.jpg" alt="P3 Community" loading="lazy"></div>
+  <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Copy%20of%20Versus_P3_20260910-IMG9479_MollJeanNye.jpg" alt="P3 Community" loading="lazy"></div>
+  </div></div>
+  <div class="gl-film">
+    <a href="https://www.youtube.com/watch?v=dMCZt1bIlzk" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      Watch the Impact Film
+    </a>
+  </div>
+</section>
+
+<!-- ===== FINAL CTA ===== -->
+<section class="final-cta">
+  <div class="final-cta-inner">
+    <h2>Your mentor is <span class="highlight">one tap away.</span></h2>
+    <p class="sub">Download the free app to get started, or open the web app in any browser. Free for every student, always.</p>
+    <div class="store-badges">
+      <a href="https://apps.apple.com/us/app/p3-pulse-of-perseverance/id6478132244" target="_blank" rel="noopener">
+        <img src="https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b02f65f0068e9fb16f0ddf_ios%20badge.svg" alt="Download on the App Store">
+      </a>
+      <a href="https://play.google.com/store/apps/details?id=com.P3.prod" target="_blank" rel="noopener">
+        <img src="https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b02f65f0068e9fb16f0de0_android%20badge.svg" alt="Get it on Google Play">
+      </a>
+    </div>
+    <p class="final-partner">Representing an institution? <a href="https://pulseofp3.org/partner">Partner with P3 &rarr;</a></p>
+  </div>
+</section>
+
+<!-- ===== FOOTER — identical to the live site (fs-combined.js source) ===== -->
+<footer class="p3-footer">
+  <div class="p3-footer-grid">
+    <div class="p3-footer-brand">
+      <img src="https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b02f65f0068e9fb16f0df1_P3%20Logo.svg" loading="lazy" alt="P3 - Pulse of Perseverance" class="p3-footer-logo">
+      <p class="p3-footer-tagline">Unlocking life-changing opportunities for young visionaries. Free on iOS &amp; Android.</p>
+      <p class="p3-footer-location">Chicago, IL &middot; Founded 2018</p>
+    </div>
+    <div class="p3-footer-col">
+      <h4 class="p3-footer-col-title">Platform</h4>
+      <a href="https://pulseofp3.org/for-students" class="p3-footer-link">For Students</a>
+      <a href="https://pulseofp3.org/partner" class="p3-footer-link">For Institutions</a>
+      <a href="https://pulseofp3.org/for-mentors" class="p3-footer-link">For Mentors</a>
+      <a href="https://pulseofp3.org/scholarships" class="p3-footer-link">Scholarships</a>
+    </div>
+    <div class="p3-footer-col">
+      <h4 class="p3-footer-col-title">About</h4>
+      <a href="https://pulseofp3.org/about/about" class="p3-footer-link">Our Story</a>
+      <a href="https://pulseofp3.org/about/about#team" class="p3-footer-link">Team</a>
+      <a href="https://drive.google.com/file/d/1IrFocCsboO6mLZsG3GAlHjmKv_V7a9Sn/view?usp=drive_link" class="p3-footer-link">Annual Report</a>
+      <a href="https://pulseofp3.org/about/in-the-press" class="p3-footer-link">Press</a>
+    </div>
+    <div class="p3-footer-col">
+      <h4 class="p3-footer-col-title">Connect</h4>
+      <a href="https://www.instagram.com/pulseofp3/" class="p3-footer-link">Instagram</a>
+      <a href="https://www.linkedin.com/company/pulseofperseverance/" class="p3-footer-link">LinkedIn</a>
+      <a href="https://www.youtube.com/@PulseofPerseverance" target="_blank" class="p3-footer-link">YouTube</a>
+      <a href="https://pulseofp3.org/donate" class="p3-footer-link">Donate</a>
+    </div>
+  </div>
+  <div class="p3-footer-bottom" style="display:flex;justify-content:center;align-items:center;gap:4px;padding-top:24px;flex-wrap:wrap;">
+    <p style="margin:0;color:rgba(255,255,255,0.4);font-size:12px;">&copy; 2026 Pulse of Perseverance Project. All rights reserved.</p>
+    <a href="https://pulseofp3.org/terms-conditions" class="p3-footer-link" style="font-size:12px;text-decoration:underline;color:rgba(255,255,255,0.4);">Terms &amp; Conditions</a>
+  </div>
+</footer>
+
+<script>
+/* ===== Nav scroll behavior — same threshold as live homepage (50px) ===== */
+(function navScroll(){
+  var nav = document.getElementById('p3nav');
+  if (!nav) return;
+  function update(){ nav.classList.toggle('scrolled', window.scrollY > 50); }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+
+/* ===== Hamburger menu toggle ===== */
+(function hamburger(){
+  var btn = document.getElementById('ppMobMenu');
+  var ov  = document.getElementById('ppMobOverlay');
+  if (!btn || !ov) return;
+  btn.addEventListener('click', function(){
+    var open = btn.classList.toggle('open');
+    ov.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  ov.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      btn.classList.remove('open');
+      ov.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    });
+  });
+})();
+</script>
+</body>
+</html>

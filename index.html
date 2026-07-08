@@ -532,7 +532,11 @@ a { text-decoration: none; color: inherit; }
   .hero-text p.sub { font-size: 14px; margin-bottom: 24px; }
   .btn-open { padding: 14px 28px; font-size: 14px; }
   .btn-ghost { padding: 13px 24px; font-size: 14px; }
-  .hero-trust { gap: 10px; font-size: 12px; }
+  /* stacked CTAs + stacked proof stats (like the live mobile hero) */
+  .hero-cta-row { flex-direction: column; width: 100%; gap: 10px; }
+  .btn-open, .btn-ghost { width: 100%; justify-content: center; }
+  .hero-trust { flex-direction: column; gap: 5px; font-size: 12.5px; }
+  .hero-trust .dot { display: none; }
 
   .why { padding: 48px 16px; }
   .why-card { padding: 24px 22px 22px; }
@@ -575,10 +579,11 @@ a { text-decoration: none; color: inherit; }
 
   .press { padding: 48px 0 40px; }
   .press-inner { padding: 0 20px; }
-  .press-logos { gap: 12px; margin-bottom: 0; }
-  .press-chip { padding: 11px 18px; border-radius: 13px; }
-  .press-logos img { height: 34px; }
-  .press-logos img[alt="The New York Times"] { height: 56px; margin: -11px 0; }
+  /* uniform 2-col chip grid — standardizes the mixed-padding logo PNGs */
+  .press-logos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 0; }
+  .press-chip { padding: 0; height: 68px; border-radius: 13px; }
+  .press-logos img { height: 38px; max-width: 78%; object-fit: contain; }
+  .press-logos img[alt="The New York Times"] { height: 58px; margin: 0; }
   .press-quote, .press-attr { display: none; }
   .gl-wrap { margin-top: 32px; }
 
@@ -595,11 +600,7 @@ a { text-decoration: none; color: inherit; }
 
 @media (max-width: 420px) {
   .hero-inner { padding: 100px 16px 52px; }
-  .hero h1 { font-size: clamp(28px, 9vw, 36px); }
-  .hero-cta-row { flex-direction: column; width: 100%; }
-  .btn-open, .btn-ghost { width: 100%; justify-content: center; }
   .showcase, .final-cta { padding-left: 14px; padding-right: 14px; }
-  .store-badges { flex-direction: row; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -919,8 +920,8 @@ a { text-decoration: none; color: inherit; }
 <!-- ===== FINAL CTA ===== -->
 <section class="final-cta">
   <div class="final-cta-inner">
-    <h2>Your mentor is <span class="highlight">one tap away.</span></h2>
-    <p class="sub">Download the free app to get started, or open the web app in any browser. Free for every student, always.</p>
+    <h2>Your next chapter starts <span class="highlight">here.</span></h2>
+    <p class="sub">Students find mentors. Professionals open doors. It all starts with the free P3 app.</p>
     <div class="store-badges">
       <a href="https://apps.apple.com/us/app/p3-pulse-of-perseverance/id6478132244" target="_blank" rel="noopener">
         <img src="https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b02f65f0068e9fb16f0ddf_ios%20badge.svg" alt="Download on the App Store">

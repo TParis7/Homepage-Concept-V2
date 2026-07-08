@@ -187,6 +187,25 @@ a { text-decoration: none; color: inherit; }
 .hero-trust .dot { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.3); }
 .hero-trust .star { color: #E0A33E; }
 
+/* Mobile-only avatar proof block (hidden on desktop) */
+.hero-proof { display: none; flex-direction: column; align-items: center; gap: 12px; }
+.hero-avatars { display: flex; align-items: center; }
+.hero-avatars img, .ha-more {
+  width: 46px; height: 46px; border-radius: 50%;
+  border: 2.5px solid rgba(255,255,255,0.92);
+  object-fit: cover; flex: 0 0 auto;
+}
+.hero-avatars img + img, .hero-avatars .ha-more { margin-left: -11px; }
+.ha-more {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #2f9e5b; color: #fff;
+  font-size: 12.5px; font-weight: 700; letter-spacing: -0.01em;
+}
+.hero-proof-lines { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 13px; color: rgba(255,255,255,0.65); }
+.hero-proof-lines strong { color: #fff; font-weight: 700; }
+.hero-proof-lines .hp-stars { color: rgba(255,255,255,0.55); }
+
+
 .hero-visual { position: relative; }
 .hero-visual::before {
   content: ''; position: absolute; inset: 12% -8% -8% -8%;
@@ -218,6 +237,8 @@ a { text-decoration: none; color: inherit; }
 }
 .section-header h2 .accent { color: var(--crimson); }
 .section-header p { font-size: 16px; max-width: 600px; margin: 14px auto 0; line-height: 1.6; color: var(--light-text); }
+/* mobile-only line break (e.g. before "Access is.") */
+.m-br { display: none; }
 
 /* Feature pills on showcase rows */
 .feat-pill {
@@ -270,6 +291,53 @@ a { text-decoration: none; color: inherit; }
 /* ===================================================================== */
 .showcase { background: #fff; padding: 64px 48px 24px; position: relative; overflow: hidden; }
 .showcase-inner { max-width: 1240px; margin: 0 auto; position: relative; z-index: 1; }
+
+/* Floating feature glyphs — decorative flair around the section header and
+   gutters (desktop only), same treatment as the /platform showcase */
+.showcase-deco { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.sd {
+  position: absolute; color: rgba(217,58,58,0.30);
+  animation: sdFloat 7s ease-in-out infinite alternate;
+}
+.sd svg { width: 100%; height: 100%; display: block; }
+.sd.sd-purple { color: rgba(106,79,176,0.34); }
+.sd.sd-maroon { color: rgba(74,16,32,0.26); }
+.sd.sd-gold { color: rgba(224,163,62,0.5); }
+.sd-1 { top: 76px;  left: 4%;  width: 64px; --r: -12deg; }
+.sd-2 { top: 250px; left: 10%; width: 38px; --r: 9deg;  animation-delay: -2.4s; }
+.sd-3 { top: 420px; left: 2.5%; width: 50px; --r: -6deg; animation-delay: -4.8s; }
+.sd-4 { top: 90px;  right: 4.5%; width: 58px; --r: 13deg; animation-delay: -3.6s; }
+.sd-5 { top: 290px; right: 10%; width: 40px; --r: -9deg; animation-delay: -1.2s; }
+.sd-6 { top: 34px;  right: 22%; width: 30px; --r: -14deg; animation-delay: -0.8s; }
+@keyframes sdFloat {
+  from { transform: translateY(-9px) rotate(var(--r, 0deg)); }
+  to   { transform: translateY(11px) rotate(var(--r, 0deg)); }
+}
+@media (max-width: 1100px) { .showcase-deco { display: none; } }
+
+/* Feature glyph strip — 3 app-style icon tiles under the showcase header,
+   anchor-linked to their rows (mirrors the /platform feature-icons strip) */
+.feature-icons {
+  display: flex; justify-content: center; align-items: flex-start;
+  gap: 40px; flex-wrap: wrap;
+  margin: 34px auto 0;
+}
+.fi {
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  font-size: 13px; font-weight: 600; color: #333;
+  transition: transform var(--transition);
+}
+.fi:hover { transform: translateY(-3px); }
+.fi-tile {
+  width: 64px; height: 64px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+}
+.fi-tile svg { width: 40px; height: 40px; }
+/* purple = AI (Smart Match), crimson + maroon = brand (per product rule) */
+.fi-match { background: linear-gradient(135deg, #8B78E8, #6A55CE); box-shadow: 0 6px 16px rgba(122,102,219,0.32); }
+.fi-opp   { background: linear-gradient(135deg, #E25454, #C42F34); box-shadow: 0 6px 16px rgba(217,58,58,0.28); }
+.fi-mile  { background: linear-gradient(135deg, #6B1624, #42101C); box-shadow: 0 6px 16px rgba(74,16,32,0.35); }
 .fr {
   display: grid; grid-template-columns: 1fr 1.15fr; gap: 64px; align-items: center;
   padding: 40px 0;
@@ -532,11 +600,12 @@ a { text-decoration: none; color: inherit; }
   .hero-text p.sub { font-size: 14px; margin-bottom: 24px; }
   .btn-open { padding: 14px 28px; font-size: 14px; }
   .btn-ghost { padding: 13px 24px; font-size: 14px; }
-  /* stacked CTAs + stacked proof stats (like the live mobile hero) */
-  .hero-cta-row { flex-direction: column; width: 100%; gap: 10px; }
-  .btn-open, .btn-ghost { width: 100%; justify-content: center; }
-  .hero-trust { flex-direction: column; gap: 5px; font-size: 12.5px; }
-  .hero-trust .dot { display: none; }
+  /* stacked CTAs (capped width) + avatar proof block instead of the
+     inline stat row */
+  .hero-cta-row { flex-direction: column; align-items: center; width: 100%; gap: 10px; }
+  .btn-open, .btn-ghost { width: min(100%, 250px); justify-content: center; }
+  .hero-trust { display: none; }
+  .hero-proof { display: flex; }
 
   .why { padding: 48px 16px; }
   .why-card { padding: 24px 22px 22px; }
@@ -548,6 +617,11 @@ a { text-decoration: none; color: inherit; }
   .section-header { margin-bottom: 28px; }
   .section-header h2 { font-size: clamp(23px, 6vw, 28px); }
   .section-header p { font-size: 13.5px; }
+  .m-br { display: inline; }
+  .feature-icons { gap: 20px; margin-top: 24px; }
+  .fi { font-size: 11.5px; gap: 8px; }
+  .fi-tile { width: 54px; height: 54px; border-radius: 13px; }
+  .fi-tile svg { width: 34px; height: 34px; }
 
   .fr { padding: 32px 0; }
   .fr-copy { text-align: center; }
@@ -652,7 +726,7 @@ a { text-decoration: none; color: inherit; }
   <div class="hero-inner">
     <div class="hero-text">
       <h1>The career accelerator for the <span class="highlight">next generation.</span></h1>
-      <p class="sub">P3 connects underserved students with vetted mentors, scholarships, and real opportunities. Free on mobile, deeper on the web.</p>
+      <p class="sub">P3 connects underserved students with vetted mentors, scholarships, and real opportunities. 100% free and powered by community.</p>
       <div class="hero-cta-row">
         <a href="https://pulseofp3.org/download" class="btn-open">Download Free App</a>
         <a href="https://www.pulseofp3.org/platform" class="btn-ghost">Explore the Web App</a>
@@ -663,6 +737,22 @@ a { text-decoration: none; color: inherit; }
         <span><strong>1,000+</strong> users connected</span>
         <span class="dot"></span>
         <span><strong>20+</strong> partner organizations</span>
+      </div>
+      <!-- Mobile-only proof block: real mentor photos from the platform
+           (same circular-avatar treatment as the FS "4 simple steps" section) -->
+      <div class="hero-proof">
+        <div class="hero-avatars">
+          <img src="https://tparis7.github.io/Mentor-Page-Redesign/mentors/01HXADB1E3N9CF3XV7FXXDY25K.jpg" alt="P3 mentor" loading="lazy">
+          <img src="https://tparis7.github.io/Mentor-Page-Redesign/mentors/01HXJ7KP3DKKM0EEQWGPJNBNJ2.jpg" alt="P3 mentor" loading="lazy">
+          <img src="https://tparis7.github.io/Mentor-Page-Redesign/mentors/01J6W5Z2CZC32ENFW8NXKCBA0W.jpg" alt="P3 mentor" loading="lazy">
+          <img src="https://tparis7.github.io/Mentor-Page-Redesign/mentors/01J9NVS90T9N1P16JT92N94QZB.jpg" alt="P3 mentor" loading="lazy">
+          <img src="https://tparis7.github.io/Mentor-Page-Redesign/mentors/01JNB2J7ZGB8NZC7ZVQJYB0PHP.jpg" alt="P3 mentor" loading="lazy">
+          <span class="ha-more">+995</span>
+        </div>
+        <div class="hero-proof-lines">
+          <span><strong>1,000+ users</strong> already connected</span>
+          <span class="hp-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <strong>4.9</strong> App Store</span>
+        </div>
       </div>
     </div>
     <div class="hero-visual">
@@ -682,7 +772,7 @@ a { text-decoration: none; color: inherit; }
   <div class="why-inner">
     <div class="section-header">
       <span class="section-tag tag-crimson">Why P3 exists</span>
-      <h2>Ambition isn't the gap. <span class="accent">Access is.</span></h2>
+      <h2>Ambition isn't the gap. <br class="m-br"><span class="accent">Access is.</span></h2>
       <p>The next generation isn't short on talent. It's short on the mentors, networks, and guidance that turn potential into a career.</p>
     </div>
     <div class="why-grid">
@@ -705,11 +795,39 @@ a { text-decoration: none; color: inherit; }
 
 <!-- ===== SHOWCASE — real product, three rows ===== -->
 <section class="showcase">
+  <div class="showcase-deco" aria-hidden="true">
+    <span class="sd sd-1 sd-purple"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6Q13.4 10.6 21.4 12Q13.4 13.4 12 21.4Q10.6 13.4 2.6 12Q10.6 10.6 12 2.6Z"/></svg></span>
+    <span class="sd sd-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></span>
+    <span class="sd sd-3 sd-maroon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span>
+    <span class="sd sd-4 sd-maroon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/></svg></span>
+    <span class="sd sd-5 sd-purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg></span>
+    <span class="sd sd-6 sd-gold"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.6L19.5 9l-5.7 1.4L12 16l-1.8-5.6L4.5 9l5.7-1.4z"/></svg></span>
+  </div>
   <div class="showcase-inner">
     <div class="section-header">
       <span class="section-tag tag-crimson">The Platform</span>
       <h2>One platform for the <span class="accent">whole journey.</span></h2>
       <p>From first question to first job: mentorship, opportunity, and momentum in one place, on the app and on the web.</p>
+      <div class="feature-icons">
+        <a href="#fr-match" class="fi">
+          <span class="fi-tile fi-match">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.6Q13.4 10.6 21.4 12Q13.4 13.4 12 21.4Q10.6 13.4 2.6 12Q10.6 10.6 12 2.6Z"/><path d="M19.4 3.2Q19.9 5.7 22.4 6.2Q19.9 6.7 19.4 9.2Q18.9 6.7 16.4 6.2Q18.9 5.7 19.4 3.2Z"/></svg>
+          </span>
+          Smart Match
+        </a>
+        <a href="#fr-opps" class="fi">
+          <span class="fi-tile fi-opp">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="13" x="3" y="7.5" rx="2.4"/><path d="M15.4 7.5V5.9a2 2 0 0 0-2-2h-2.8a2 2 0 0 0-2 2v1.6"/><path d="M3 12.4c2.9 1.5 6 2.2 9 2.2s6.1-.7 9-2.2"/><path d="M12 13.4v2"/></svg>
+          </span>
+          Opportunities
+        </a>
+        <a href="#fr-milestones" class="fi">
+          <span class="fi-tile fi-mile">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><defs><mask id="mile-fi"><rect width="24" height="24" fill="#fff"/><path d="M13.4 20.4 8.8 16.6l5.4-3.7-3-2.6 1.2-1.8" fill="none" stroke="#000" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></mask></defs><path d="M2.8 20.8 12.4 6.4 21.2 20.8Z" mask="url(#mile-fi)"/><path d="M12.4 6.4V1" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" fill="none"/><path d="M12.4 1.1h4.8l-1.45 2.15 1.45 2.15h-4.8Z"/></svg>
+          </span>
+          Milestones
+        </a>
+      </div>
     </div>
 
     <!-- 1. Smart Match -->
@@ -748,7 +866,7 @@ a { text-decoration: none; color: inherit; }
         <h3>Scholarships. Internships. <span class="accent">Jobs.</span></h3>
         <p class="lede">A curated opportunity feed with real deadlines and one-tap apply, plus monthly P3 scholarships awarded to ambitious students.</p>
         <ul>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>120+ live opportunities</strong> curated for where students are going</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>120+ live opportunities</strong> curated for each student</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>Monthly scholarships</strong> awarded by P3</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>Posted by mentors</strong> from their own networks</span></li>
         </ul>
@@ -842,8 +960,8 @@ a { text-decoration: none; color: inherit; }
       <h2>Student journeys become <span class="accent">institutional intelligence.</span></h2>
       <p class="lede">Partner institutions get a live Client Dashboard on the same platform students already use, no LMS integration required.</p>
       <ul>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>Cohort engagement</strong> and mentorship activity in real time</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>Milestone and retention analytics</strong> across every student</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>Cohort engagement</strong> and mentorship activity</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>Milestone and retention analytics</strong> across cohorts</span></li>
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>Longitudinal outcomes</strong> that prove mentorship works</span></li>
       </ul>
       <a href="https://pulseofp3.org/partner" class="btn-outline">

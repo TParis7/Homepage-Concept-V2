@@ -128,8 +128,10 @@ outCss = outCss.replace(/([^{}]+)\{/g, (m, prelude) => {
 });
 // hide Webflow's native chrome; whitelist our injected body-level pieces
 outCss += `
-/* Hide Webflow's native page chrome once the injected page is live */
-body.hp2-active > *:not(#hp2-root):not(.p3-nav):not(.pp-mob-overlay):not(.p3-footer):not(script):not(style):not(link) { display: none !important; }
+/* Hide Webflow's native page chrome once the injected page is live.
+   Intercom mounts its chat bubble as body-level [id/class^=intercom]
+   containers — whitelisted so the launcher survives the swap. */
+body.hp2-active > *:not(#hp2-root):not(.p3-nav):not(.pp-mob-overlay):not(.p3-footer):not(script):not(style):not(link):not([id^="intercom"]):not([class^="intercom"]) { display: none !important; }
 
 /* Legacy-script shield (homepage only): the still-registered patch scripts
    inject "footer{padding:36px 20px 20px!important}" and

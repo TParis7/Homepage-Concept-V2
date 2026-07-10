@@ -1,0 +1,21 @@
+<!-- ============================================================
+     HOMEPAGE — Page Settings → Custom Code → Inside <head> tag
+     REPLACES the previous head snippet (the data-hp-ready pre-hide
+     from the hero-devices work). Keep a copy of the old one first.
+     ============================================================ -->
+
+<!-- HP2 fouc-guard: hide everything (old Webflow content included) until
+     hp2-combined.js has injected the new page and flipped hp2-active.
+     6s safety timeout reveals the page if the loader ever fails. -->
+<style>body:not(.hp2-active){visibility:hidden !important}</style>
+<script>setTimeout(function(){if(document.body&&!document.body.classList.contains('hp2-active')){document.body.classList.add('hp2-active');}},6000)</script>
+
+<!-- Social share card (static meta = crawler-visible; same workflow as
+     /platform). IMPORTANT: also CLEAR the Open Graph Image field in this
+     page's settings — Webflow renders that tag first and crawlers prefer
+     the first og:image. -->
+<meta property="og:image" content="https://tparis7.github.io/Homepage-Concept-V2/og-homepage.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://tparis7.github.io/Homepage-Concept-V2/og-homepage.jpg">

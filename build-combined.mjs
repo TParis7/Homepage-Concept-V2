@@ -24,7 +24,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 const CDN = "https://tparis7.github.io/Homepage-Concept-V2/";
 // Asset cache-buster: bump this whenever shots/ images/ press-logos/ change so
 // browsers refetch them. combined.js itself is busted by the loader's ?v=.
-const ASSET_VER = "20260814a";
+const ASSET_VER = "20260814b";
 const html = readFileSync(new URL("./index.html", import.meta.url), "utf8");
 
 // ---- extract pieces --------------------------------------------------------

@@ -45,7 +45,7 @@
   // Nav + mobile overlay + footer as BODY-LEVEL SIBLINGS of #hp2-root — they
   // must inherit Webflow's body Satoshi/30px metrics (see Donate-page lesson).
   var chrome = document.createElement('div');
-  chrome.innerHTML = "<div class=\"p3-nav\" id=\"p3nav\">\n  <a href=\"https://pulseofp3.org/\" class=\"p3-nav-logo\">\n    <img src=\"https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b02f65f0068e9fb16f0df1_P3%20Logo.svg\" alt=\"P3 - Pulse of Perseverance\" class=\"p3-nav-logo-img\">\n  </a>\n  <div class=\"p3-nav-links\">\n    <a href=\"https://pulseofp3.org/\" class=\"pp-home-desktop-hide\">Home</a>\n    <a href=\"https://pulseofp3.org/for-students\" class=\"p3-nav-link\">For Students</a>\n    <a href=\"https://pulseofp3.org/partner\" class=\"p3-nav-link\">For Institutions</a>\n    <a href=\"https://pulseofp3.org/for-mentors\" class=\"p3-nav-link\">For Mentors</a>\n    <a href=\"https://pulseofp3.org/about/about\" class=\"p3-nav-link\">About</a>\n  </div>\n  <a href=\"https://pulseofp3.org/download\" class=\"p3-nav-cta\">Get the App</a>\n  <button class=\"pp-mob-menu\" id=\"ppMobMenu\" aria-label=\"Toggle menu\" aria-expanded=\"false\">\n    <span></span><span></span><span></span>\n  </button>\n</div>\n<div class=\"pp-mob-overlay\" id=\"ppMobOverlay\">\n  <a class=\"pp-mob-overlay-link\" href=\"https://pulseofp3.org/\">Home</a>\n  <a class=\"pp-mob-overlay-link\" href=\"https://pulseofp3.org/for-students\">For Students</a>\n  <a class=\"pp-mob-overlay-link\" href=\"https://pulseofp3.org/partner\">For Institutions</a>\n  <a class=\"pp-mob-overlay-link\" href=\"https://pulseofp3.org/for-mentors\">For Mentors</a>\n  <a class=\"pp-mob-overlay-link\" href=\"https://pulseofp3.org/about/about\">About</a>\n  <a class=\"pp-mob-overlay-cta\" href=\"https://pulseofp3.org/download\">Get the App</a>\n</div>\n<footer class=\"p3-footer\">\n  <div class=\"p3-footer-grid\">\n    <div class=\"p3-footer-brand\">\n      <img src=\"https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b02f65f0068e9fb16f0df1_P3%20Logo.svg\" loading=\"lazy\" alt=\"P3 - Pulse of Perseverance\" class=\"p3-footer-logo\">\n      <p class=\"p3-footer-tagline\">Unlocking life-changing opportunities for young visionaries. Free on iOS &amp; Android.</p>\n      <p class=\"p3-footer-location\">Chicago, IL &middot; Founded 2018</p>\n    </div>\n    <div class=\"p3-footer-col\">\n      <h4 class=\"p3-footer-col-title\">Platform</h4>\n      <a href=\"https://pulseofp3.org/for-students\" class=\"p3-footer-link\">For Students</a>\n      <a href=\"https://pulseofp3.org/partner\" class=\"p3-footer-link\">For Institutions</a>\n      <a href=\"https://pulseofp3.org/for-mentors\" class=\"p3-footer-link\">For Mentors</a>\n      <a href=\"https://pulseofp3.org/scholarships\" class=\"p3-footer-link\">Scholarships</a>\n    </div>\n    <div class=\"p3-footer-col\">\n      <h4 class=\"p3-footer-col-title\">About</h4>\n      <a href=\"https://pulseofp3.org/about/about\" class=\"p3-footer-link\">Our Story</a>\n      <a href=\"https://pulseofp3.org/about/about#team\" class=\"p3-footer-link\">Team</a>\n      <a href=\"https://drive.google.com/file/d/1IrFocCsboO6mLZsG3GAlHjmKv_V7a9Sn/view?usp=drive_link\" class=\"p3-footer-link\">Annual Report</a>\n      <a href=\"https://pulseofp3.org/about/in-the-press\" class=\"p3-footer-link\">Press</a>\n    </div>\n    <div class=\"p3-footer-col\">\n      <h4 class=\"p3-footer-col-title\">Connect</h4>\n      <a href=\"https://www.instagram.com/pulseofp3/\" class=\"p3-footer-link\">Instagram</a>\n      <a href=\"https://www.linkedin.com/company/pulseofperseverance/\" class=\"p3-footer-link\">LinkedIn</a>\n      <a href=\"https://www.youtube.com/@PulseofPerseverance\" target=\"_blank\" class=\"p3-footer-link\">YouTube</a>\n      <a href=\"https://pulseofp3.org/donate\" class=\"p3-footer-link\">Donate</a>\n    </div>\n  </div>\n  <div class=\"p3-footer-bottom\" style=\"display:flex;justify-content:center;align-items:center;gap:4px;padding-top:24px;flex-wrap:wrap;\">\n    <p style=\"margin:0;color:rgba(255,255,255,0.4);font-size:12px;\">&copy; 2026 Pulse of Perseverance Project. All rights reserved.</p>\n    <a href=\"https://pulseofp3.org/terms-conditions\" class=\"p3-footer-link\" style=\"font-size:12px;text-decoration:underline;color:rgba(255,255,255,0.4);\">Terms &amp; Conditions</a>\n  </div>\n</footer>";
+  chrome.innerHTML = "<div class=\"p3-nav\" id=\"p3nav\">\n  <a href=\"https://pulseofp3.org/\" class=\"p3-nav-logo\">\n    <img src=\"https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b02f65f0068e9fb16f0df1_P3%20Logo.svg\" alt=\"P3 - Pulse of Perseverance\" class=\"p3-nav-logo-img\">\n  </a>\n  <div class=\"p3-nav-links\">\n    <a href=\"https://pulseofp3.org/\" class=\"pp-home-desktop-hide\">Home</a>\n    <a href=\"https://pulseofp3.org/for-students\" class=\"p3-nav-link\">For Students</a>\n    <a href=\"https://pulseofp3.org/partner\" class=\"p3-nav-link\">For Institutions</a>\n    <a href=\"https://pulseofp3.org/for-mentors\" class=\"p3-nav-link\">For Mentors</a>\n    <a href=\"https://pulseofp3.org/about/about\" class=\"p3-nav-link\">About</a>\n  </div>\n  <a href=\"https://pulseofp3.org/download\" class=\"p3-nav-cta\">Get the App</a>\n  <button class=\"pp-mob-menu\" id=\"ppMobMenu\" aria-label=\"Toggle menu\" aria-expanded=\"false\">\n    <span></span><span></span><span></span>\n  </button>\n</div>\n<div class=\"pp-mob-overlay\" id=\"ppMobOverlay\">\n  <a class=\"pp-mob-overlay-link\" href=\"https://pulseofp3.org/\">Home</a>\n  <a class=\"pp-mob-overlay-link\" href=\"https://pulseofp3.org/for-students\">For Students</a>\n  <a class=\"pp-mob-overlay-link\" href=\"https://pulseofp3.org/partner\">For Institutions</a>\n  <a class=\"pp-mob-overlay-link\" href=\"https://pulseofp3.org/for-mentors\">For Mentors</a>\n  <a class=\"pp-mob-overlay-link\" href=\"https://pulseofp3.org/about/about\">About</a>\n  <a class=\"pp-mob-overlay-cta\" href=\"https://pulseofp3.org/download\">Get the App</a>\n</div>\n<footer class=\"p3-footer\">\n  <div class=\"p3-footer-grid\">\n    <div class=\"p3-footer-brand\">\n      <img src=\"https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b02f65f0068e9fb16f0df1_P3%20Logo.svg\" loading=\"lazy\" alt=\"P3 - Pulse of Perseverance\" class=\"p3-footer-logo\">\n      <p class=\"p3-footer-tagline\">Unlocking life-changing opportunities for young visionaries. Free on iOS &amp; Android.</p>\n      <p class=\"p3-footer-location\">Chicago, IL &middot; Founded 2018</p>\n    </div>\n    <div class=\"p3-footer-col\">\n      <h4 class=\"p3-footer-col-title\">Platform</h4>\n      <a href=\"https://pulseofp3.org/for-students\" class=\"p3-footer-link\">For Students</a>\n      <a href=\"https://pulseofp3.org/partner\" class=\"p3-footer-link\">For Institutions</a>\n      <a href=\"https://pulseofp3.org/for-mentors\" class=\"p3-footer-link\">For Mentors</a>\n      <a href=\"https://pulseofp3.org/scholarships\" class=\"p3-footer-link\">Scholarships</a>\n    </div>\n    <div class=\"p3-footer-col\">\n      <h4 class=\"p3-footer-col-title\">About</h4>\n      <a href=\"https://pulseofp3.org/about/about\" class=\"p3-footer-link\">Our Story</a>\n      <a href=\"https://pulseofp3.org/about/about#team\" class=\"p3-footer-link\">Team</a>\n      <a href=\"https://drive.google.com/file/d/1IrFocCsboO6mLZsG3GAlHjmKv_V7a9Sn/view?usp=drive_link\" class=\"p3-footer-link\">Annual Report</a>\n      <a href=\"https://pulseofp3.org/about/in-the-press\" class=\"p3-footer-link\">Press</a>\n    </div>\n    <div class=\"p3-footer-col\">\n      <h4 class=\"p3-footer-col-title\">Connect</h4>\n      <a href=\"https://www.instagram.com/pulseofp3/\" class=\"p3-footer-link\">Instagram</a>\n      <a href=\"https://www.linkedin.com/company/pulseofperseverance/\" class=\"p3-footer-link\">LinkedIn</a>\n      <a href=\"https://www.youtube.com/@PulseofPerseverance\" target=\"_blank\" class=\"p3-footer-link\">YouTube</a>\n      <a href=\"https://pulseofp3.org/donate\" class=\"p3-footer-link\">Donate</a>\n    </div>\n  </div>\n  <div class=\"p3-footer-bottom\" style=\"display:flex;justify-content:center;align-items:center;gap:4px;padding-top:24px;flex-wrap:wrap;\">\n    <p style=\"margin:0;color:rgba(255,255,255,0.4);font-size:12px;\">&copy; 2026 Pulse of Perseverance Project. All rights reserved.</p>\n    <a href=\"https://pulseofp3.org/app-terms-conditions\" class=\"p3-footer-link\" style=\"font-size:12px;text-decoration:underline;color:rgba(255,255,255,0.4);\">Terms &amp; Conditions</a>\n  </div>\n</footer>";
   while (chrome.firstElementChild) document.body.appendChild(chrome.firstElementChild);
 
   // Cancel Webflow IX2 body animations, then reveal (releases the FOUC guard)
@@ -101,4 +101,46 @@
       });
     });
   }
+
+  /*
+    ONE Terms link in the footer, not two.
+
+    p3footerfix v1.0.0 is still registered on this page from the pre-rebuild
+    homepage, and it appends its own "Terms & Conditions" anchor to the footer
+    it used to fix. That footer is now ours, so the student sees the link
+    twice, once pointing at /terms-conditions (a 301) and once at the real
+    page. Rather than depend on the legacy script being unregistered, drop any
+    Terms anchor that is not the one in our own footer bar.
+
+    It runs more than once because p3footerfix binds on DOMContentLoaded and
+    may land after this file.
+  */
+  function dedupeTermsLinks() {
+    /*
+      Keep OUR anchor, the direct child of the bottom bar. p3footerfix appends
+      its copy INSIDE the copyright paragraph, which sits in the same bar and
+      comes first in document order, so a plain descendant selector picks the
+      legacy one and deletes ours. That way round the link survives only as
+      long as the legacy script stays registered.
+    */
+    var keep = document.querySelector('.p3-footer-bottom > a.p3-footer-link[href*="terms"]');
+    var all = document.querySelectorAll('a[href*="terms-conditions"], a[href*="app-terms"]');
+    all.forEach(function (a) {
+      if (a === keep) return;
+      // Only the footer's stray copies; never a link inside page content.
+      if (a.closest('#hp2-root .hp2-section')) return;
+      var host = a.parentElement;
+      a.remove();
+      // The paragraph it was injected into carries the copyright line, so it
+      // stays; only an entirely empty one left behind would show as a gap.
+      if (host && host.tagName === 'P' && !host.textContent.trim() && !host.querySelector('a')) {
+        host.remove();
+      }
+    });
+  }
+  dedupeTermsLinks();
+  document.addEventListener('DOMContentLoaded', dedupeTermsLinks);
+  window.addEventListener('load', dedupeTermsLinks);
+  setTimeout(dedupeTermsLinks, 300);
+  setTimeout(dedupeTermsLinks, 1200);
 })();

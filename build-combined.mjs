@@ -17,6 +17,8 @@
 //   can't double-bind it (two toggles = instant open+close).
 // - Webflow's native chrome is hidden via body.hp2-active > *:not(...) and
 //   IX2 body animations are cancelled.
+// - dedupeTermsLinks() keeps ONE Terms link in the footer while the legacy
+//   p3footerfix script is still registered (it appends its own copy).
 //
 // Usage: node build-combined.mjs   (writes hp2-combined.js next to it)
 import { readFileSync, writeFileSync } from "node:fs";
@@ -273,6 +275,48 @@ const js = `/* hp2-combined.js v1.0.0 — pulseofp3.org homepage rebuild
       });
     });
   }
+
+  /*
+    ONE Terms link in the footer, not two.
+
+    p3footerfix v1.0.0 is still registered on this page from the pre-rebuild
+    homepage, and it appends its own "Terms & Conditions" anchor to the footer
+    it used to fix. That footer is now ours, so the student sees the link
+    twice, once pointing at /terms-conditions (a 301) and once at the real
+    page. Rather than depend on the legacy script being unregistered, drop any
+    Terms anchor that is not the one in our own footer bar.
+
+    It runs more than once because p3footerfix binds on DOMContentLoaded and
+    may land after this file.
+  */
+  function dedupeTermsLinks() {
+    /*
+      Keep OUR anchor, the direct child of the bottom bar. p3footerfix appends
+      its copy INSIDE the copyright paragraph, which sits in the same bar and
+      comes first in document order, so a plain descendant selector picks the
+      legacy one and deletes ours. That way round the link survives only as
+      long as the legacy script stays registered.
+    */
+    var keep = document.querySelector('.p3-footer-bottom > a.p3-footer-link[href*="terms"]');
+    var all = document.querySelectorAll('a[href*="terms-conditions"], a[href*="app-terms"]');
+    all.forEach(function (a) {
+      if (a === keep) return;
+      // Only the footer's stray copies; never a link inside page content.
+      if (a.closest('#hp2-root .hp2-section')) return;
+      var host = a.parentElement;
+      a.remove();
+      // The paragraph it was injected into carries the copyright line, so it
+      // stays; only an entirely empty one left behind would show as a gap.
+      if (host && host.tagName === 'P' && !host.textContent.trim() && !host.querySelector('a')) {
+        host.remove();
+      }
+    });
+  }
+  dedupeTermsLinks();
+  document.addEventListener('DOMContentLoaded', dedupeTermsLinks);
+  window.addEventListener('load', dedupeTermsLinks);
+  setTimeout(dedupeTermsLinks, 300);
+  setTimeout(dedupeTermsLinks, 1200);
 })();
 `;
 

@@ -277,52 +277,34 @@ const js = `/* hp2-combined.js v1.0.0 — pulseofp3.org homepage rebuild
   }
 
   /*
-    ONE Terms link in the footer, not two.
-
-    p3footerfix v1.0.0 is still registered on this page from the pre-rebuild
-    homepage, and it appends its own "Terms & Conditions" anchor to the footer
-    it used to fix. That footer is now ours, so the student sees the link
-    twice, once pointing at /terms-conditions (a 301) and once at the real
-    page. Rather than depend on the legacy script being unregistered, drop any
-    Terms anchor that is not the one in our own footer bar.
-
-    It runs more than once because p3footerfix binds on DOMContentLoaded and
-    may land after this file.
+    Legacy-script guard for the footer (Sep 9 2026). p3footerfix 1.4.0 is still
+    registered on this page. After we run it (a) rewrites the footer's
+    "For Institutions" link back to /partner and (b) appends its own
+    "Terms & Conditions" anchor inside the copyright line. Both are undone here,
+    on a schedule and again whenever the footer changes, so the outcome does not
+    depend on which script runs last. Delete once the legacy scripts are gone.
   */
-  function dedupeTermsLinks() {
-    /*
-      Keep OUR anchor, the direct child of the bottom bar. p3footerfix appends
-      its copy INSIDE the copyright paragraph, which sits in the same bar and
-      comes first in document order, so a plain descendant selector picks the
-      legacy one and deletes ours. That way round the link survives only as
-      long as the legacy script stays registered.
-    */
-    var keep = document.querySelector('.p3-footer-bottom > a.p3-footer-link[href*="terms"]');
-    var all = document.querySelectorAll('a[href*="terms-conditions"], a[href*="app-terms"]');
-    all.forEach(function (a) {
-      if (a === keep) return;
-      // Only the footer's stray copies; never a link inside page content.
-      if (a.closest('#hp2-root .hp2-section')) return;
-      var host = a.parentElement;
-      a.remove();
-      // The paragraph it was injected into carries the copyright line, so it
-      // stays; only an entirely empty one left behind would show as a gap.
-      if (host && host.tagName === 'P' && !host.textContent.trim() && !host.querySelector('a')) {
-        host.remove();
+  function guardFooter() {
+    var footer = document.querySelector('.p3-footer');
+    if (!footer) return;
+    footer.querySelectorAll('a').forEach(function (a) {
+      var h = a.getAttribute('href') || '';
+      /* no backslashes in these regexes: the homepage build carries this block through a template literal, which drops them */
+      if (h === '/partner' || /pulseofp3[.]org[/]partner[/]?$/.test(h)) a.setAttribute('href', 'https://enterprise.pulseofp3.org/overview');
+      if (/^Terms[ ]*&[ ]*Conditions$/i.test((a.textContent || '').trim())) {
+        var host = a.parentElement;
+        a.remove();
+        if (host && host.tagName === 'P' && !host.textContent.trim() && !host.querySelector('a')) host.remove();
       }
     });
   }
-  dedupeTermsLinks();
-  document.addEventListener('DOMContentLoaded', dedupeTermsLinks);
-  window.addEventListener('load', dedupeTermsLinks);
-  setTimeout(dedupeTermsLinks, 300);
-  setTimeout(dedupeTermsLinks, 1200);
-  setTimeout(dedupeTermsLinks, 3000);
-  // p3footerfix 1.4.0 appends its copy after all of the above have run (seen live Sep 9 2026,
-  // still there at 8s), so watch the bar and remove it the moment it lands.
+  guardFooter();
+  document.addEventListener('DOMContentLoaded', guardFooter);
+  window.addEventListener('load', guardFooter);
+  [300, 1200, 3000].forEach(function (ms) { setTimeout(guardFooter, ms); });
   if (window.MutationObserver) {
-    var termsBar = document.querySelector('.p3-footer-bottom');
-    if (termsBar) new MutationObserver(dedupeTermsLinks).observe(termsBar, { childList: true, subtree: true });
+    var guarded = document.querySelector('.p3-footer');
+    if (guarded) new MutationObserver(guardFooter).observe(guarded, { childList: true, subtree: true, attributes: true, attributeFilter: ['href'] });
   }
 })();
 `;

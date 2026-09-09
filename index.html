@@ -688,36 +688,95 @@ a { text-decoration: none; color: inherit; }
 
 /* Chrome family (Sep 2026 parity pass). Family only: the nav, overlay and footer are body-level siblings that inherit Webflow's body line-height (30.006px), the value every nav measurement depends on, so line-height is never set here. Element selectors as well as the containers, because Webflow's compiled stylesheet sets Inter directly on .p3-nav-cta, .p3-footer-col-title, .p3-footer-tagline and .pp-mob-overlay-link, and a direct rule beats inheritance. */
 .p3-nav, .pp-mob-overlay, .p3-footer, .p3-nav .p3-nav-links a, .p3-nav .p3-nav-link, .p3-nav .p3-nav-cta, .pp-mob-overlay a, .pp-mob-overlay .pp-mob-overlay-link, .pp-mob-overlay .pp-mob-overlay-cta, .p3-footer h4, .p3-footer p, .p3-footer a, .p3-footer .p3-footer-col-title, .p3-footer .p3-footer-tagline, .p3-footer .p3-footer-location, .p3-footer .p3-footer-link { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+/* ═══ Public-site nav v2 (Sep 2026). Shared by the nine public pages; source of truth is Website Folder/site-chrome/apply-nav.py, re-run it rather than editing this block by hand. Selectors carry three classes on purpose: pages own rules like .pp-mob-overlay a:last-child (0,2,1) and .dl-page a (0,1,1) that would otherwise win. ═══ */
+.p3-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; gap: 0; height: auto; padding: 16px 40px; background: transparent; transition: background 0.3s, box-shadow 0.3s, backdrop-filter 0.3s; }
+.p3-nav.scrolled { background: rgba(26, 26, 26, 0.95) !important; -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px) !important; box-shadow: 0 2px 20px rgba(0,0,0,0.15); }
+.p3-nav .p3-nav-logo { display: block; flex: none; margin: 0; padding: 0; text-decoration: none; z-index: 10; }
+.p3-nav .p3-nav-logo-img, .p3-nav .p3-nav-logo img { height: 36px; max-height: 36px; width: auto; display: block; }
+.p3-nav .p3-nav-links { display: flex; align-items: center; gap: 32px; margin-left: auto; }
+.p3-nav .p3-nav-links a, .p3-nav .p3-nav-links .p3-nav-link { margin: 0; padding: 0; background: none; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.85); text-decoration: none; white-space: nowrap; opacity: 1; transition: color 0.2s; }
+.p3-nav .p3-nav-links a:hover, .p3-nav .p3-nav-links a[aria-current='page'] { color: #fff; }
+.p3-nav .p3-nav-actions { display: flex; align-items: center; gap: 10px; margin-left: 32px; flex: none; }
+.p3-nav .p3-nav-actions .p3-nav-btn, .pp-mob-overlay .p3-menu .p3-menu-actions .p3-nav-btn { display: inline-flex; align-items: center; justify-content: center; height: 36px; margin: 0; padding: 0 18px; border-radius: 999px; border: 1px solid transparent; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13.5px; font-weight: 600; line-height: 1; letter-spacing: 0.01em; text-decoration: none; white-space: nowrap; opacity: 1; cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease; }
+.p3-nav .p3-nav-actions .p3-nav-btn:focus-visible, .pp-mob-overlay .p3-menu .p3-nav-btn:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.p3-nav .p3-nav-actions .p3-nav-btn-enterprise, .pp-mob-overlay .p3-menu .p3-menu-actions .p3-nav-btn-enterprise { background: #FAF8F6; border-color: #FAF8F6; color: #4A1020; }
+.p3-nav .p3-nav-actions .p3-nav-btn-enterprise:hover, .pp-mob-overlay .p3-menu .p3-menu-actions .p3-nav-btn-enterprise:hover { background: #fff; border-color: #fff; color: #2E0614; transform: translateY(-1px); box-shadow: 0 8px 20px -6px rgba(0,0,0,0.5); }
+.p3-nav .p3-nav-actions .p3-nav-btn-login, .pp-mob-overlay .p3-menu .p3-menu-actions .p3-nav-btn-login { background: #D93A3A; border-color: #D93A3A; color: #fff; }
+.p3-nav .p3-nav-actions .p3-nav-btn-login:hover, .pp-mob-overlay .p3-menu .p3-menu-actions .p3-nav-btn-login:hover { background: #C33232; border-color: #C33232; color: #fff; transform: translateY(-1px); box-shadow: 0 8px 20px -6px rgba(217,58,58,0.7); }
+.p3-nav .p3-nav-actions .p3-nav-btn:active, .pp-mob-overlay .p3-menu .p3-menu-actions .p3-nav-btn:active { transform: translateY(0); box-shadow: none; }
+.p3-nav .pp-mob-menu { display: none; flex-direction: column; align-items: center; justify-content: center; gap: 4px; width: 44px; height: 44px; margin: -4px -12px -4px 0; padding: 0; background: none; border: 0; color: #fff; cursor: pointer; z-index: 1001; }
+.p3-nav .pp-mob-menu span { display: block; width: 18px; height: 2px; margin: 0; border-radius: 2px; background: currentColor; transition: transform 0.25s ease, opacity 0.2s ease; }
+.p3-nav .pp-mob-menu.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.p3-nav .pp-mob-menu.open span:nth-child(2) { opacity: 0; }
+.p3-nav .pp-mob-menu.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+.pp-mob-overlay { position: fixed; inset: 0; z-index: 1002; display: none; flex-direction: row; justify-content: flex-end; align-items: stretch; gap: 0; padding: 0; background: rgba(12, 4, 8, 0.62); opacity: 1; transform: none; transition: none; }
+.pp-mob-overlay.open { display: flex !important; opacity: 1; transform: none; }
+.pp-mob-overlay .p3-menu-scrim, .pp-mob-overlay a.p3-menu-scrim:last-child { position: absolute; inset: 0; display: block; margin: 0; padding: 0; background: none; }
+.pp-mob-overlay .p3-menu { position: relative; width: min(88vw, 340px); height: 100%; display: flex; flex-direction: column; gap: 22px; padding: 20px 20px 28px; overflow-y: auto; color: #fff; background: linear-gradient(178deg, #3a0c18 0%, #4a1020 42%, #220810 100%); box-shadow: -12px 0 40px rgba(0,0,0,0.35); animation: p3-menu-in 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+@keyframes p3-menu-in { from { transform: translateX(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+.pp-mob-overlay .p3-menu .p3-menu-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.pp-mob-overlay .p3-menu .p3-menu-logo { height: 36px; width: auto; display: block; }
+.pp-mob-overlay .p3-menu .p3-menu-top .p3-menu-close { display: inline-flex; align-items: center; min-height: 40px; margin: 0; padding: 0 16px; border: 1px solid rgba(255,255,255,0.24); border-radius: 999px; background: none; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 600; text-decoration: none; opacity: 1; }
+.pp-mob-overlay .p3-menu .p3-menu-nav { display: flex; flex-direction: column; }
+.pp-mob-overlay .p3-menu .p3-menu-nav a { display: flex; align-items: center; min-height: 52px; margin: 0; padding: 0; border: 0; border-bottom: 1px solid rgba(255,255,255,0.12); border-radius: 0; background: none; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 17px; font-weight: 500; color: rgba(255,255,255,0.9); text-decoration: none; opacity: 1; }
+.pp-mob-overlay .p3-menu .p3-menu-nav a:hover, .pp-mob-overlay .p3-menu .p3-menu-nav a[aria-current='page'] { color: #fff; }
+.pp-mob-overlay .p3-menu .p3-menu-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pp-mob-overlay .p3-menu .p3-menu-actions .p3-nav-btn { height: 44px; font-size: 14px; }
+.pp-mob-overlay .p3-menu .p3-menu-download { margin: auto 0 0; display: block; padding: 16px 18px; border: 1px solid rgba(255,255,255,0.16); border-radius: 14px; background: rgba(255,255,255,0.07); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 500; line-height: 1.4; text-decoration: none; opacity: 1; }
+.pp-mob-overlay .p3-menu .p3-menu-download-eyebrow { display: block; margin-bottom: 6px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.6); }
+.pp-mob-overlay .p3-menu .p3-menu-download-title { display: block; margin-bottom: 4px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 18px; font-weight: 600; letter-spacing: -0.005em; color: #fff; }
+.pp-mob-overlay .p3-menu .p3-menu-download-cta { display: inline-block; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 600; color: #ff8a8a; }
+@media (max-width: 991px) {
+  .p3-nav .pp-mob-menu { display: flex; }
+  .p3-nav .p3-nav-links, .p3-nav .p3-nav-actions { display: none !important; }
+  .p3-nav { padding: 16px !important; height: 64px !important; }
+  .p3-nav .p3-nav-logo-img, .p3-nav .p3-nav-logo img { max-height: 36px !important; height: 36px !important; }
+}
 </style>
 </head>
 <body>
 
 <!-- ===== NAV — identical to the live site (fs-combined.js source) ===== -->
 <div class="p3-nav" id="p3nav">
-  <a href="https://pulseofp3.org/" class="p3-nav-logo">
-    <img src="https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b02f65f0068e9fb16f0df1_P3%20Logo.svg" alt="P3 - Pulse of Perseverance" class="p3-nav-logo-img">
-  </a>
+  <a href="https://www.pulseofp3.org/" class="p3-nav-logo" aria-label="Pulse of Perseverance Project"><img src="https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b02f65f0068e9fb16f0df1_P3%20Logo.svg" alt="P3 - Pulse of Perseverance" class="p3-nav-logo-img"></a>
   <div class="p3-nav-links">
-    <a href="https://pulseofp3.org/" class="pp-home-desktop-hide">Home</a>
-    <a href="https://pulseofp3.org/for-students" class="p3-nav-link">For Students</a>
-    <a href="https://pulseofp3.org/partner" class="p3-nav-link">For Institutions</a>
-    <a href="https://pulseofp3.org/for-mentors" class="p3-nav-link">For Mentors</a>
-    <a href="https://pulseofp3.org/about/about" class="p3-nav-link">About</a>
+    <a href="https://www.pulseofp3.org/for-students" class="p3-nav-link">For Students</a>
+    <a href="https://www.pulseofp3.org/for-mentors" class="p3-nav-link">For Mentors</a>
+    <a href="https://www.pulseofp3.org/platform" class="p3-nav-link">Platform</a>
+    <a href="https://www.pulseofp3.org/about/about" class="p3-nav-link">About</a>
   </div>
-  <a href="https://pulseofp3.org/download" class="p3-nav-cta">Get the App</a>
-  <button class="pp-mob-menu" id="ppMobMenu" aria-label="Toggle menu" aria-expanded="false">
-    <span></span><span></span><span></span>
-  </button>
+  <div class="p3-nav-actions">
+    <a href="https://enterprise.pulseofp3.org/overview" class="p3-nav-btn p3-nav-btn-enterprise">Enterprise</a>
+    <a href="https://platform.pulseofp3.org/" class="p3-nav-btn p3-nav-btn-login">Login</a>
+  </div>
+  <button type="button" class="pp-mob-menu" id="ppMobMenu" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
 </div>
 
 <!-- Mobile fullscreen overlay menu -->
 <div class="pp-mob-overlay" id="ppMobOverlay">
-  <a class="pp-mob-overlay-link" href="https://pulseofp3.org/">Home</a>
-  <a class="pp-mob-overlay-link" href="https://pulseofp3.org/for-students">For Students</a>
-  <a class="pp-mob-overlay-link" href="https://pulseofp3.org/partner">For Institutions</a>
-  <a class="pp-mob-overlay-link" href="https://pulseofp3.org/for-mentors">For Mentors</a>
-  <a class="pp-mob-overlay-link" href="https://pulseofp3.org/about/about">About</a>
-  <a class="pp-mob-overlay-cta" href="https://pulseofp3.org/download">Get the App</a>
+  <a class="p3-menu-scrim" href="javascript:void(0)" aria-hidden="true" tabindex="-1"></a>
+  <div class="p3-menu" role="dialog" aria-modal="true" aria-label="Menu">
+    <div class="p3-menu-top">
+      <img src="https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b02f65f0068e9fb16f0df1_P3%20Logo.svg" alt="P3" class="p3-menu-logo">
+      <a class="p3-menu-close" href="javascript:void(0)" role="button">Close</a>
+    </div>
+    <nav class="p3-menu-nav" aria-label="Site">
+      <a href="https://www.pulseofp3.org/for-students">For Students</a>
+      <a href="https://www.pulseofp3.org/for-mentors">For Mentors</a>
+      <a href="https://www.pulseofp3.org/platform">Platform</a>
+      <a href="https://www.pulseofp3.org/about/about">About</a>
+    </nav>
+    <div class="p3-menu-actions">
+      <a href="https://enterprise.pulseofp3.org/overview" class="p3-nav-btn p3-nav-btn-enterprise">Enterprise</a>
+      <a href="https://platform.pulseofp3.org/" class="p3-nav-btn p3-nav-btn-login">Login</a>
+    </div>
+    <a class="p3-menu-download" href="https://www.pulseofp3.org/download">
+      <span class="p3-menu-download-eyebrow">Free on iOS and Android</span>
+      <span class="p3-menu-download-title">Get the P3 app</span>
+      <span class="p3-menu-download-cta">Download the app</span>
+    </a>
+  </div>
 </div>
 
 <!-- ===== HERO ===== -->

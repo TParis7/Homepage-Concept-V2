@@ -317,6 +317,13 @@ const js = `/* hp2-combined.js v1.0.0 — pulseofp3.org homepage rebuild
   window.addEventListener('load', dedupeTermsLinks);
   setTimeout(dedupeTermsLinks, 300);
   setTimeout(dedupeTermsLinks, 1200);
+  setTimeout(dedupeTermsLinks, 3000);
+  // p3footerfix 1.4.0 appends its copy after all of the above have run (seen live Sep 9 2026,
+  // still there at 8s), so watch the bar and remove it the moment it lands.
+  if (window.MutationObserver) {
+    var termsBar = document.querySelector('.p3-footer-bottom');
+    if (termsBar) new MutationObserver(dedupeTermsLinks).observe(termsBar, { childList: true, subtree: true });
+  }
 })();
 `;
 

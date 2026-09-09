@@ -692,7 +692,8 @@ a { text-decoration: none; color: inherit; }
 /* ═══ Public-site nav v2 (Sep 2026). Shared by the nine public pages; source of truth is Website Folder/site-chrome/apply-nav.py, re-run it rather than editing this block by hand. Selectors carry three classes on purpose: pages own rules like .pp-mob-overlay a:last-child (0,2,1) and .dl-page a (0,1,1) that would otherwise win. ═══ */
 .p3-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; gap: 0; height: auto; padding: 16px 40px; background: transparent; transition: background 0.3s, box-shadow 0.3s, backdrop-filter 0.3s; }
 .p3-nav.scrolled { background: rgba(26, 26, 26, 0.95) !important; -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px) !important; box-shadow: 0 2px 20px rgba(0,0,0,0.15); }
-.p3-nav .p3-nav-logo { display: block; flex: none; margin: 0; padding: 0; text-decoration: none; z-index: 10; }
+/* height on the anchor: the compiled Webflow stylesheet sets .p3-nav-logo { height: 30px } below 768px at (0,1,0). The 36px logo then overflows a 30px box and flex-centering lands it 3px low, which was the phone-width difference against the Enterprise bar. This selector is (0,2,0) and wins. */
+.p3-nav .p3-nav-logo { display: block; height: 36px; flex: none; margin: 0; padding: 0; text-decoration: none; z-index: 10; }
 .p3-nav .p3-nav-logo-img, .p3-nav .p3-nav-logo img { height: 36px; max-height: 36px; width: auto; display: block; }
 .p3-nav .p3-nav-links { display: flex; align-items: center; gap: 32px; margin-left: auto; }
 .p3-nav .p3-nav-links a, .p3-nav .p3-nav-links .p3-nav-link { margin: 0; padding: 0; background: none; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.85); text-decoration: none; white-space: nowrap; opacity: 1; transition: color 0.2s; }

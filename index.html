@@ -697,6 +697,7 @@ a { text-decoration: none; color: inherit; }
 .p3-nav .p3-nav-links { display: flex; align-items: center; gap: 32px; margin-left: auto; }
 .p3-nav .p3-nav-links a, .p3-nav .p3-nav-links .p3-nav-link { margin: 0; padding: 0; background: none; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.85); text-decoration: none; white-space: nowrap; opacity: 1; transition: color 0.2s; }
 .p3-nav .p3-nav-links a:hover, .p3-nav .p3-nav-links a[aria-current='page'] { color: #fff; }
+.p3-nav .p3-nav-links .pp-home-desktop-hide { display: none !important; } /* the legacy homepage script (p3hpshared) still injects a Home link; keep it hidden until that script is unregistered */
 .p3-nav .p3-nav-actions { display: flex; align-items: center; gap: 10px; margin-left: 32px; flex: none; }
 .p3-nav .p3-nav-actions .p3-nav-btn, .pp-mob-overlay .p3-menu .p3-menu-actions .p3-nav-btn { display: inline-flex; align-items: center; justify-content: center; height: 36px; margin: 0; padding: 0 18px; border-radius: 999px; border: 1px solid transparent; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13.5px; font-weight: 600; line-height: 1; letter-spacing: 0.01em; text-decoration: none; white-space: nowrap; opacity: 1; cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease; }
 .p3-nav .p3-nav-actions .p3-nav-btn:focus-visible, .pp-mob-overlay .p3-menu .p3-nav-btn:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
@@ -710,8 +711,9 @@ a { text-decoration: none; color: inherit; }
 .p3-nav .pp-mob-menu.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
 .p3-nav .pp-mob-menu.open span:nth-child(2) { opacity: 0; }
 .p3-nav .pp-mob-menu.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
-.pp-mob-overlay { position: fixed; inset: 0; z-index: 1002; display: none; flex-direction: row; justify-content: flex-end; align-items: stretch; gap: 0; padding: 0; background: rgba(12, 4, 8, 0.62); opacity: 1; transform: none; transition: none; }
-.pp-mob-overlay.open { display: flex !important; opacity: 1; transform: none; }
+/* !important on the drawer layout: the still-registered legacy homepage script (p3hpshared) injects its own .pp-mob-overlay rules AFTER this file, centered and at z-index 99, which is how the drawer came out centered and under the bar there. */
+.pp-mob-overlay { position: fixed !important; inset: 0 !important; z-index: 1002 !important; display: none; flex-direction: row !important; justify-content: flex-end !important; align-items: stretch !important; gap: 0 !important; padding: 0 !important; background: rgba(12, 4, 8, 0.62) !important; opacity: 1 !important; transform: none !important; transition: none !important; }
+.pp-mob-overlay.open { display: flex !important; }
 .pp-mob-overlay .p3-menu-scrim, .pp-mob-overlay a.p3-menu-scrim:last-child { position: absolute; inset: 0; display: block; margin: 0; padding: 0; background: none; }
 .pp-mob-overlay .p3-menu { position: relative; width: min(88vw, 340px); height: 100%; display: flex; flex-direction: column; gap: 22px; padding: 20px 20px 28px; overflow-y: auto; color: #fff; background: linear-gradient(178deg, #3a0c18 0%, #4a1020 42%, #220810 100%); box-shadow: -12px 0 40px rgba(0,0,0,0.35); animation: p3-menu-in 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
 @keyframes p3-menu-in { from { transform: translateX(24px); opacity: 0; } to { transform: none; opacity: 1; } }

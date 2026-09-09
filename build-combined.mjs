@@ -91,13 +91,16 @@ outCss = outCss.replace(/^img \{ max-width: 100%; display: block; \}\n/m, "");
 outCss = outCss.replace(/^a \{ text-decoration: none; color: inherit; \}\n/m, "");
 outCss = outCss.replace(
   /body \{[^}]*\}/,
-  "#hp2-root { font-family: 'Inter', -apple-system, sans-serif; color: #1a1a1a; background: #fff; line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }\n#hp2-root img { max-width: 100%; display: block; }\n#hp2-root a { text-decoration: none; color: inherit; }",
+  "#hp2-root { font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; color: #1a1a1a; background: #fff; line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }\n#hp2-root img { max-width: 100%; display: block; }\n#hp2-root a { text-decoration: none; color: inherit; }",
 );
 outCss = outCss.replace(":root {", "#hp2-root {");
-// live site provides Satoshi via Webflow's body styles — drop the shim
+// Chrome font rule. The standalone preview pins line-height: 30.006px to
+// mimic Webflow; live, the nav/footer INHERIT that from Webflow's body, so
+// only the family survives into the build (Plus Jakarta Sans since the
+// Sep 2026 parity pass; it used to be dropped entirely because it was Satoshi).
 outCss = outCss.replace(
-  /\.p3-nav, \.pp-mob-overlay, \.p3-footer \{ font-family: 'Satoshi'[^}]*\}\n/,
-  "",
+  /(\.p3-nav, \.pp-mob-overlay, \.p3-footer \{ font-family: '[^']+', sans-serif;) line-height: 30\.006px; \}/,
+  "$1 }",
 );
 // reduced-motion wildcard → scoped
 outCss = outCss.replace(
@@ -175,9 +178,9 @@ const js = `/* hp2-combined.js v1.0.0 — pulseofp3.org homepage rebuild
   'use strict';
   if (document.getElementById('hp2-root')) return;
 
-  // Fonts (Inter + Space Grotesk) — skip if another page script already loaded them
-  var FONTS = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap';
-  if (!document.querySelector('link[href*="Space+Grotesk"]')) {
+  // Fonts (Plus Jakarta Sans + Bricolage Grotesque) — skip if another page script already loaded them
+  var FONTS = 'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Plus+Jakarta+Sans:wght@400..800&display=swap';
+  if (!document.querySelector('link[href*="Bricolage+Grotesque"]')) {
     var fl = document.createElement('link');
     fl.rel = 'stylesheet';
     fl.href = FONTS;

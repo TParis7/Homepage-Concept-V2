@@ -370,6 +370,35 @@ a { text-decoration: none; color: inherit; }
 .showcase .fr-visual .browser { max-width: 88%; margin-left: auto; margin-right: auto; }
 
 /* ===================================================================== */
+/* PHONE BESIDE THE BROWSER — the app on every showcase row (Sep 2026)   */
+/* ===================================================================== */
+/* The /platform page's pattern. The frame is the /redesign page's device,
+   sized from its own container (cqw inside .phone is a share of the phone's
+   width). Captures are cropped of their status bar (148 of 1320px), so the
+   screen paints a band in the capture's own top colour (--status) and draws
+   the Dynamic Island back on; a capture whose top is a gradient ships full
+   height instead (.phone-screen.full). The phone sits level with the browser,
+   bottoms aligned, a quarter of it over the frame. */
+.fr-visual { container-type: inline-size; }
+.showcase .fr-visual.dual .browser { max-width: 80%; margin-left: 0; margin-right: auto; }
+.fr.flip .fr-visual.dual .browser { margin-left: auto; margin-right: 0; }
+.phone { position: absolute; right: 2cqw; bottom: 0; width: 24cqw; z-index: 2; container-type: inline-size; }
+.fr.flip .phone { right: auto; left: 2cqw; }
+.phone-frame {
+  position: relative; padding: 3.2cqw; border-radius: 15.5cqw;
+  background: linear-gradient(158deg, #4a4148 0%, #141115 34%, #0d0b0e 68%, #332b33 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), inset 0 0 0 1px rgba(255,255,255,0.12),
+    0 2px 4px rgba(0,0,0,0.28), 0 18px 36px rgba(20,5,16,0.36);
+}
+.phone-frame::before { content: ''; position: absolute; left: -1.1cqw; top: 19cqw; width: 1.1cqw; height: 7cqw; border-radius: 0.8cqw 0 0 0.8cqw; background: #28232a; box-shadow: 0 11cqw 0 0 #28232a, 0 21.5cqw 0 0 #28232a; }
+.phone-frame::after { content: ''; position: absolute; right: -1.1cqw; top: 31cqw; width: 1.1cqw; height: 15cqw; border-radius: 0 0.8cqw 0.8cqw 0; background: #28232a; }
+.phone-screen { position: relative; border-radius: 12.3cqw; overflow: hidden; background: var(--status, #ced5d7); }
+.phone-screen::before { content: ''; display: block; padding-top: 11.2%; }
+.phone-screen.full::before { display: none; }
+.phone-screen::after { content: ''; position: absolute; top: 2.4cqw; left: 50%; transform: translateX(-50%); width: 27.8cqw; height: 8.9cqw; border-radius: 4.5cqw; background: #000; }
+.phone-screen img { display: block; width: 100%; height: auto; }
+
+/* ===================================================================== */
 /* AUDIENCE CARDS — who it's for                                          */
 /* ===================================================================== */
 .aud { background: var(--warm-gray); padding: 64px 48px; }
@@ -912,13 +941,18 @@ a { text-decoration: none; color: inherit; }
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>Matches that stick:</strong> +90% match retention</span></li>
         </ul>
       </div>
-      <div class="fr-visual">
+      <div class="fr-visual dual">
         <div class="browser">
           <div class="browser-bar">
             <div class="browser-dots"><span></span><span></span><span></span></div>
             <div class="browser-url">platform.pulseofp3.org/mentors</div>
           </div>
           <img src="shots/find-mentor.webp" alt="Find a Mentor: the vetted P3 mentor community" loading="lazy">
+        </div>
+        <div class="phone" style="--status:#8a8886">
+          <div class="phone-frame">
+            <div class="phone-screen"><img src="shots/phone-player.webp" alt="A mentor video answer in the P3 app" loading="lazy"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -938,13 +972,18 @@ a { text-decoration: none; color: inherit; }
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>Posted by mentors</strong> from their own networks</span></li>
         </ul>
       </div>
-      <div class="fr-visual">
+      <div class="fr-visual dual">
         <div class="browser">
           <div class="browser-bar">
             <div class="browser-dots"><span></span><span></span><span></span></div>
             <div class="browser-url">platform.pulseofp3.org/opportunities</div>
           </div>
           <img src="shots/opportunities.webp" alt="Opportunities: scholarships, internships, and jobs" loading="lazy">
+        </div>
+        <div class="phone" style="--status:#ced5d7">
+          <div class="phone-frame">
+            <div class="phone-screen"><img src="shots/phone-opportunities.webp" alt="Opportunities in the P3 app" loading="lazy"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -964,13 +1003,18 @@ a { text-decoration: none; color: inherit; }
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><strong>Mentors see progress</strong> and know exactly when to step in</span></li>
         </ul>
       </div>
-      <div class="fr-visual">
+      <div class="fr-visual dual">
         <div class="browser">
           <div class="browser-bar">
             <div class="browser-dots"><span></span><span></span><span></span></div>
             <div class="browser-url">platform.pulseofp3.org/milestones</div>
           </div>
           <img src="shots/milestones-crop.webp" alt="Milestones: the full pathway journey on one screen" loading="lazy">
+        </div>
+        <div class="phone">
+          <div class="phone-frame">
+            <div class="phone-screen full"><img src="shots/phone-milestones-full.webp" alt="Milestones in the P3 app" loading="lazy"></div>
+          </div>
         </div>
       </div>
     </div>

@@ -487,7 +487,7 @@ a { text-decoration: none; color: inherit; }
   background-repeat: no-repeat, no-repeat;
   background-color: var(--warm-gray);
 }
-.press-inner { max-width: 1100px; margin: 0 auto; text-align: center; padding: 0 48px; }
+.press-inner { max-width: 1160px; margin: 0 auto; text-align: center; padding: 0 48px; }
 .press-logos {
   display: flex; justify-content: center; align-items: center;
   gap: 16px; flex-wrap: wrap; margin-bottom: 36px;
@@ -514,6 +514,8 @@ a { text-decoration: none; color: inherit; }
 .press-logos img[alt="The New York Times"] { height: 62px; }
 .press-logos img[alt="The Telly Awards"] { height: 58px; }
 .press-logos img[alt="ABC News"] { height: 64px; }
+/* the Anthem Gold Winner badge keeps its gold: in grayscale it reads as silver */
+.press-logos img[alt="2026 Anthem Awards Gold Winner"] { height: 64px; opacity: 1; filter: none; }
 .press-chip:hover img { opacity: 1; filter: grayscale(0); }
 .press-quote {
   max-width: 760px; margin: 0 auto;
@@ -608,6 +610,10 @@ a { text-decoration: none; color: inherit; }
   .inst-inner { grid-template-columns: 1fr; gap: 40px; }
   .inst-copy { order: 1; }
   .inst .fr-visual { order: 2; }
+
+  /* seven press chips stay on one row down to ~1000px */
+  .press-logos { gap: 12px; }
+  .press-chip { padding: 15px 16px; }
 }
 
 /* ≤991px — mobile nav, values from fs-combined.js */
@@ -691,6 +697,9 @@ a { text-decoration: none; color: inherit; }
   .press-logos img[alt="ABC News"] { height: 54px; }
   .press-logos img[alt="The New York Times"] { height: 46px; margin: 0; }
   .press-logos img[alt="The Telly Awards"] { height: 44px; }
+  .press-logos img[alt="2026 Anthem Awards Gold Winner"] { height: 50px; }
+  /* an odd last chip spans the row instead of sitting alone on the left */
+  .press-chip:last-child:nth-child(odd) { grid-column: 1 / -1; }
   .press-quote, .press-attr { display: none; }
   .gl-wrap { margin-top: 32px; }
 
@@ -1111,6 +1120,7 @@ a { text-decoration: none; color: inherit; }
       <span class="press-chip"><img src="press-logos/adweek-nyc.png" alt="Advertising Week New York" loading="lazy"></span>
       <span class="press-chip"><img src="press-logos/telly.png" alt="The Telly Awards" loading="lazy"></span>
       <span class="press-chip"><img src="press-logos/webby.png" alt="The Webby Awards" loading="lazy"></span>
+      <span class="press-chip"><img src="press-logos/anthem-gold-2026.png" alt="2026 Anthem Awards Gold Winner" loading="lazy"></span>
     </div>
     <p class="press-quote">&ldquo;P3 is building what should have existed decades ago: a platform that connects talent with opportunity <span class="accent">regardless of zip code.</span>&rdquo;</p>
     <p class="press-attr">Featured in national media coverage</p>

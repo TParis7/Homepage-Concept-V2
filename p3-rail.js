@@ -1,0 +1,133 @@
+/* p3-rail v1 (Nov 12 2026). Source: Website Folder/site-chrome/rail.js, applied by apply-rail.py.
+   Safari paints its own chrome in the page's body background colour: the side rail on a folded
+   iPhone Duo, the bars on other iPhones, the overscroll area. The body was white, so a maroon
+   hero looked cut off beside a white rail. This keeps the body colour equal to the section at
+   the right edge of the view, so the rail continues the page. Touch devices only. Nothing the
+   visitor sees inside the page changes: body children that relied on the white body get it
+   as their own background first. */
+(function () {
+  if (window.__p3Rail) return;
+  window.__p3Rail = 1;
+  if (!window.matchMedia || !window.matchMedia('(pointer: coarse)').matches) return;
+  if (!document.elementsFromPoint) return;
+  var MEDIA = [50, 18, 28, 1]; // behind a full-bleed photo or video: the heroes' dark maroon
+  var orig = null, last = '', queued = false;
+
+  function parse(c) {
+    var m = /rgba?\(([^)]+)\)/.exec(c || '');
+    if (!m) return null;
+    var p = m[1].split(/[\s,\/]+/).filter(Boolean).map(parseFloat);
+    if (p.length < 3 || isNaN(p[0])) return null;
+    return [p[0], p[1], p[2], p.length > 3 && !isNaN(p[3]) ? p[3] : 1];
+  }
+  function gradient(layer) {
+    var stops = layer.match(/rgba?\([^)]+\)/g);
+    if (!stops) return null;
+    var r = 0, g = 0, b = 0, a = 0, n = 0;
+    for (var i = 0; i < stops.length; i++) {
+      var c = parse(stops[i]);
+      if (!c) continue;
+      r += c[0] * c[3]; g += c[1] * c[3]; b += c[2] * c[3]; a += c[3]; n++;
+    }
+    if (!n || a === 0) return null;
+    return [r / a, g / a, b / a, a / n];
+  }
+  // background-image is a comma list of layers, top first; split it outside parentheses.
+  function split(img) {
+    var out = [], depth = 0, start = 0;
+    for (var i = 0; i < img.length; i++) {
+      var ch = img.charAt(i);
+      if (ch === '(') depth++;
+      else if (ch === ')') depth--;
+      else if (ch === ',' && depth === 0) { out.push(img.slice(start, i)); start = i + 1; }
+    }
+    out.push(img.slice(start));
+    return out;
+  }
+  // One element's paint, top first. MEDIA marks a full-bleed photo or video.
+  function layersOf(el, vw) {
+    var cs = getComputedStyle(el), out = [];
+    if (cs.visibility === 'hidden' || parseFloat(cs.opacity) < 0.05) return out;
+    var wide = el.getBoundingClientRect().width >= vw * 0.9;
+    var tag = el.tagName;
+    if (tag === 'IMG' || tag === 'VIDEO' || tag === 'CANVAS' || tag === 'PICTURE') {
+      if (wide) out.push(MEDIA);
+      return out;
+    }
+    var img = cs.backgroundImage || 'none';
+    if (img !== 'none') {
+      var parts = split(img);
+      for (var i = 0; i < parts.length; i++) {
+        if (parts[i].indexOf('gradient') !== -1) { var gr = gradient(parts[i]); if (gr) out.push(gr); }
+        else if (parts[i].indexOf('url(') !== -1 && wide) out.push(MEDIA);
+      }
+    }
+    var bg = parse(cs.backgroundColor);
+    if (bg && bg[3] > 0.02) out.push(bg);
+    return out;
+  }
+  function sample() {
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var stack = document.elementsFromPoint(vw - 3, Math.round(vh * 0.5));
+    var layers = [], base = [orig[0], orig[1], orig[2]], done = false;
+    for (var i = 0; i < stack.length && !done; i++) {
+      var el = stack[i];
+      if (el === document.body || el === document.documentElement) break;
+      var ls = layersOf(el, vw);
+      for (var j = 0; j < ls.length; j++) {
+        if (ls[j] === MEDIA) {
+          // A photo under a mostly opaque wash reads as the wash; otherwise as the heroes' maroon.
+          var cov = 0, acc = [0, 0, 0];
+          for (var m = layers.length - 1; m >= 0; m--) {
+            var t = layers[m], ta = Math.min(1, t[3]);
+            acc = [t[0] * ta + acc[0] * (1 - ta), t[1] * ta + acc[1] * (1 - ta), t[2] * ta + acc[2] * (1 - ta)];
+            cov = ta + cov * (1 - ta);
+          }
+          base = cov >= 0.6 ? [acc[0] / cov, acc[1] / cov, acc[2] / cov] : [MEDIA[0], MEDIA[1], MEDIA[2]];
+          done = true; break;
+        }
+        layers.push(ls[j]);
+        if (ls[j][3] >= 0.98) { done = true; break; }
+      }
+    }
+    var c = base;
+    for (var k = layers.length - 1; k >= 0; k--) {
+      var l = layers[k], a = Math.min(1, l[3]);
+      c = [l[0] * a + c[0] * (1 - a), l[1] * a + c[1] * (1 - a), l[2] * a + c[2] * (1 - a)];
+    }
+    return 'rgb(' + Math.round(c[0]) + ', ' + Math.round(c[1]) + ', ' + Math.round(c[2]) + ')';
+  }
+  // Body children that showed the body's own colour keep it once the body starts changing.
+  function guard() {
+    var kids = document.body.children, fill = 'rgb(' + orig[0] + ', ' + orig[1] + ', ' + orig[2] + ')';
+    for (var i = 0; i < kids.length; i++) {
+      var el = kids[i];
+      if (el.__p3RailSeen) continue;
+      var tag = el.tagName;
+      if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'LINK' || tag === 'NOSCRIPT') continue;
+      var cs = getComputedStyle(el);
+      if (cs.display === 'none') continue;
+      el.__p3RailSeen = 1;
+      if (cs.position === 'fixed' || cs.position === 'absolute' || cs.position === 'sticky') continue;
+      var bg = parse(cs.backgroundColor);
+      if ((!bg || bg[3] < 0.02) && (cs.backgroundImage || 'none') === 'none') el.style.backgroundColor = fill;
+    }
+  }
+  function sync() {
+    queued = false;
+    if (!document.body) return;
+    if (!orig) {
+      var o = parse(getComputedStyle(document.body).backgroundColor);
+      orig = o && o[3] > 0.5 ? [Math.round(o[0]), Math.round(o[1]), Math.round(o[2])] : [255, 255, 255];
+    }
+    guard();
+    var c = sample();
+    if (c !== last) { last = c; document.body.style.backgroundColor = c; }
+  }
+  function queue() { if (!queued) { queued = true; (window.requestAnimationFrame || setTimeout)(sync); } }
+  window.addEventListener('scroll', queue, { passive: true });
+  window.addEventListener('resize', queue);
+  window.addEventListener('load', queue);
+  document.addEventListener('DOMContentLoaded', queue);
+  [0, 300, 900, 2000, 4000].forEach(function (t) { setTimeout(queue, t); });
+})();

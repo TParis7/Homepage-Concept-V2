@@ -309,5 +309,9 @@ const js = `/* hp2-combined.js v1.0.0 — pulseofp3.org homepage rebuild
 })();
 `;
 
-writeFileSync(new URL("./hp2-combined.js", import.meta.url), js);
+// p3-rail: the shared Safari rail colour script (Website Folder/site-chrome/rail.js in Cowork,
+// copied here as p3-rail.js by site-chrome/apply-rail.py), appended verbatim to the bundle.
+let rail = "";
+try { rail = "\n/* p3-rail:start */\n" + readFileSync(new URL("./p3-rail.js", import.meta.url), "utf8").trimEnd() + "\n/* p3-rail:end */\n"; } catch {}
+writeFileSync(new URL("./hp2-combined.js", import.meta.url), js + rail);
 console.log(`hp2-combined.js written (${Math.round(js.length / 1024)} KB, ${renames.length} classes renamed)`);

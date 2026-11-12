@@ -1,4 +1,4 @@
-/* p3-rail v1.2 (Nov 12 2026). Source: Website Folder/site-chrome/rail.js, applied by apply-rail.py.
+/* p3-rail v1.3 (Nov 12 2026). Source: Website Folder/site-chrome/rail.js, applied by apply-rail.py.
    Safari paints its own chrome in the page's body background colour: the side rail on a folded
    iPhone Duo, the bars on other iPhones, the overscroll area. The body was white, so a maroon
    hero looked cut off beside a white rail. This keeps the body colour in step with the sections
@@ -9,7 +9,8 @@
    view (it used to flip at the midpoint), and the first colour fades in as soon as the hero
    lands. Measured on the Duo: Safari's rail follows per-frame changes and CSS transitions in
    step with the page.
-   v1.2: understands a preset first-paint colour (see sync). */
+   v1.2: understands a preset first-paint colour (see sync).
+   v1.3: forces a 1px repaint with each colour change so Safari applies it at once (see sync). */
 (function () {
   if (window.__p3Rail) return;
   window.__p3Rail = 1;
@@ -17,7 +18,7 @@
   if (!document.elementsFromPoint) return;
   var MEDIA = [50, 18, 28, 1]; // behind a full-bleed photo or video: the heroes' dark maroon
   var FADE = 'background-color .35s ease';
-  var orig = null, last = '', queued = false, scrolled = false, canFade = null;
+  var orig = null, last = '', queued = false, scrolled = false, canFade = null, ping = null;
   var cache = typeof WeakMap === 'function' ? new WeakMap() : null;
 
   function parse(c) {
@@ -164,6 +165,18 @@
     // Scrolling drives the colour frame by frame; anything else (load, late content, rotation) fades.
     if (canFade) body.style.transition = byScroll ? 'none' : FADE;
     body.style.backgroundColor = c;
+    // v1.3: Safari only picks the new body colour up with the page's next paint. With nothing else
+    // repainting, the rail trailed the scroll by 0.1-0.3s in uneven steps (measured on the Duo from
+    // a screen recording). Recolouring a 1px, near-transparent fixed element forces that paint, and
+    // the rail then follows within a frame or two.
+    if (!ping) {
+      ping = document.createElement('div');
+      ping.setAttribute('aria-hidden', 'true');
+      ping.style.cssText = 'position:fixed;left:0;bottom:0;width:1px;height:1px;opacity:.02;pointer-events:none;z-index:2147483000';
+      // On <html>, not <body>: the bundles hide every body child that is not their own root.
+      document.documentElement.appendChild(ping);
+    }
+    ping.style.backgroundColor = c;
   }
   function queue(e) {
     if (e && e.type === 'scroll') scrolled = true;

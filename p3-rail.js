@@ -1,4 +1,4 @@
-/* p3-rail v1.1 (Nov 12 2026). Source: Website Folder/site-chrome/rail.js, applied by apply-rail.py.
+/* p3-rail v1.2 (Nov 12 2026). Source: Website Folder/site-chrome/rail.js, applied by apply-rail.py.
    Safari paints its own chrome in the page's body background colour: the side rail on a folded
    iPhone Duo, the bars on other iPhones, the overscroll area. The body was white, so a maroon
    hero looked cut off beside a white rail. This keeps the body colour in step with the sections
@@ -8,7 +8,8 @@
    v1.1: the colour BLENDS between two sections as their boundary crosses the middle half of the
    view (it used to flip at the midpoint), and the first colour fades in as soon as the hero
    lands. Measured on the Duo: Safari's rail follows per-frame changes and CSS transitions in
-   step with the page. */
+   step with the page.
+   v1.2: understands a preset first-paint colour (see sync). */
 (function () {
   if (window.__p3Rail) return;
   window.__p3Rail = 1;
@@ -148,7 +149,11 @@
     if (!body) return;
     if (!orig) {
       var bcs = getComputedStyle(body), o = parse(bcs.backgroundColor);
-      orig = o && o[3] > 0.5 ? [Math.round(o[0]), Math.round(o[1]), Math.round(o[2])] : [255, 255, 255];
+      // v1.2: a page may preset the body colour for its first paint, before this file arrives
+      // (<style id="p3-rail-initial"> in the page's Webflow head code). The body's computed colour
+      // is then the hero's, not the page's base, so the base stays the white every page had.
+      var preset = document.getElementById('p3-rail-initial');
+      orig = !preset && o && o[3] > 0.5 ? [Math.round(o[0]), Math.round(o[1]), Math.round(o[2])] : [255, 255, 255];
       // Fade only if the page has no transition of its own on the body.
       canFade = !/[1-9]/.test(bcs.transitionDuration || '0s');
     }

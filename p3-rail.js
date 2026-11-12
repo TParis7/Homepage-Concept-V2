@@ -1,17 +1,23 @@
-/* p3-rail v1 (Nov 12 2026). Source: Website Folder/site-chrome/rail.js, applied by apply-rail.py.
+/* p3-rail v1.1 (Nov 12 2026). Source: Website Folder/site-chrome/rail.js, applied by apply-rail.py.
    Safari paints its own chrome in the page's body background colour: the side rail on a folded
    iPhone Duo, the bars on other iPhones, the overscroll area. The body was white, so a maroon
-   hero looked cut off beside a white rail. This keeps the body colour equal to the section at
-   the right edge of the view, so the rail continues the page. Touch devices only. Nothing the
+   hero looked cut off beside a white rail. This keeps the body colour in step with the sections
+   at the right edge of the view, so the rail continues the page. Touch devices only. Nothing the
    visitor sees inside the page changes: body children that relied on the white body get it
-   as their own background first. */
+   as their own background first.
+   v1.1: the colour BLENDS between two sections as their boundary crosses the middle half of the
+   view (it used to flip at the midpoint), and the first colour fades in as soon as the hero
+   lands. Measured on the Duo: Safari's rail follows per-frame changes and CSS transitions in
+   step with the page. */
 (function () {
   if (window.__p3Rail) return;
   window.__p3Rail = 1;
   if (!window.matchMedia || !window.matchMedia('(pointer: coarse)').matches) return;
   if (!document.elementsFromPoint) return;
   var MEDIA = [50, 18, 28, 1]; // behind a full-bleed photo or video: the heroes' dark maroon
-  var orig = null, last = '', queued = false;
+  var FADE = 'background-color .35s ease';
+  var orig = null, last = '', queued = false, scrolled = false, canFade = null;
+  var cache = typeof WeakMap === 'function' ? new WeakMap() : null;
 
   function parse(c) {
     var m = /rgba?\(([^)]+)\)/.exec(c || '');
@@ -46,29 +52,32 @@
   }
   // One element's paint, top first. MEDIA marks a full-bleed photo or video.
   function layersOf(el, vw) {
+    if (cache) { var hit = cache.get(el); if (hit) return hit; }
     var cs = getComputedStyle(el), out = [];
-    if (cs.visibility === 'hidden' || parseFloat(cs.opacity) < 0.05) return out;
-    var wide = el.getBoundingClientRect().width >= vw * 0.9;
-    var tag = el.tagName;
-    if (tag === 'IMG' || tag === 'VIDEO' || tag === 'CANVAS' || tag === 'PICTURE') {
-      if (wide) out.push(MEDIA);
-      return out;
-    }
-    var img = cs.backgroundImage || 'none';
-    if (img !== 'none') {
-      var parts = split(img);
-      for (var i = 0; i < parts.length; i++) {
-        if (parts[i].indexOf('gradient') !== -1) { var gr = gradient(parts[i]); if (gr) out.push(gr); }
-        else if (parts[i].indexOf('url(') !== -1 && wide) out.push(MEDIA);
+    if (cs.visibility !== 'hidden' && parseFloat(cs.opacity) >= 0.05) {
+      var wide = el.getBoundingClientRect().width >= vw * 0.9;
+      var tag = el.tagName;
+      if (tag === 'IMG' || tag === 'VIDEO' || tag === 'CANVAS' || tag === 'PICTURE') {
+        if (wide) out.push(MEDIA);
+      } else {
+        var img = cs.backgroundImage || 'none';
+        if (img !== 'none') {
+          var parts = split(img);
+          for (var i = 0; i < parts.length; i++) {
+            if (parts[i].indexOf('gradient') !== -1) { var gr = gradient(parts[i]); if (gr) out.push(gr); }
+            else if (parts[i].indexOf('url(') !== -1 && wide) out.push(MEDIA);
+          }
+        }
+        var bg = parse(cs.backgroundColor);
+        if (bg && bg[3] > 0.02) out.push(bg);
       }
     }
-    var bg = parse(cs.backgroundColor);
-    if (bg && bg[3] > 0.02) out.push(bg);
+    if (cache) cache.set(el, out);
     return out;
   }
-  function sample() {
-    var vw = window.innerWidth, vh = window.innerHeight;
-    var stack = document.elementsFromPoint(vw - 3, Math.round(vh * 0.5));
+  // The colour at the right edge of the view, y px down.
+  function colourAt(y, vw) {
+    var stack = document.elementsFromPoint(vw - 3, Math.round(y));
     var layers = [], base = [orig[0], orig[1], orig[2]], done = false;
     for (var i = 0; i < stack.length && !done; i++) {
       var el = stack[i];
@@ -95,6 +104,25 @@
       var l = layers[k], a = Math.min(1, l[3]);
       c = [l[0] * a + c[0] * (1 - a), l[1] * a + c[1] * (1 - a), l[2] * a + c[2] * (1 - a)];
     }
+    return c;
+  }
+  function near(a, b) { return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) + Math.abs(a[2] - b[2]) < 9; }
+  // Blend the section above with the section below while their boundary crosses the middle half.
+  function sample() {
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var y1 = vh * 0.25, y2 = vh * 0.75;
+    var c1 = colourAt(y1, vw), c2 = colourAt(y2, vw), c = c1;
+    if (!near(c1, c2)) {
+      var lo = y1, hi = y2;
+      for (var i = 0; i < 6; i++) {
+        var mid = (lo + hi) / 2;
+        if (near(colourAt(mid, vw), c1)) lo = mid; else hi = mid;
+      }
+      var t = (y2 - (lo + hi) / 2) / (y2 - y1);
+      t = t < 0 ? 0 : t > 1 ? 1 : t;
+      t = t * t * (3 - 2 * t);
+      c = [c1[0] + (c2[0] - c1[0]) * t, c1[1] + (c2[1] - c1[1]) * t, c1[2] + (c2[2] - c1[2]) * t];
+    }
     return 'rgb(' + Math.round(c[0]) + ', ' + Math.round(c[1]) + ', ' + Math.round(c[2]) + ')';
   }
   // Body children that showed the body's own colour keep it once the body starts changing.
@@ -114,20 +142,44 @@
     }
   }
   function sync() {
-    queued = false;
-    if (!document.body) return;
+    var byScroll = scrolled;
+    queued = false; scrolled = false;
+    var body = document.body;
+    if (!body) return;
     if (!orig) {
-      var o = parse(getComputedStyle(document.body).backgroundColor);
+      var bcs = getComputedStyle(body), o = parse(bcs.backgroundColor);
       orig = o && o[3] > 0.5 ? [Math.round(o[0]), Math.round(o[1]), Math.round(o[2])] : [255, 255, 255];
+      // Fade only if the page has no transition of its own on the body.
+      canFade = !/[1-9]/.test(bcs.transitionDuration || '0s');
     }
     guard();
     var c = sample();
-    if (c !== last) { last = c; document.body.style.backgroundColor = c; }
+    if (c === last) return;
+    last = c;
+    // Scrolling drives the colour frame by frame; anything else (load, late content, rotation) fades.
+    if (canFade) body.style.transition = byScroll ? 'none' : FADE;
+    body.style.backgroundColor = c;
   }
-  function queue() { if (!queued) { queued = true; (window.requestAnimationFrame || setTimeout)(sync); } }
+  function queue(e) {
+    if (e && e.type === 'scroll') scrolled = true;
+    if (!queued) { queued = true; (window.requestAnimationFrame || setTimeout)(sync); }
+  }
+  function reset() { if (cache) cache = new WeakMap(); queue(); }
   window.addEventListener('scroll', queue, { passive: true });
-  window.addEventListener('resize', queue);
-  window.addEventListener('load', queue);
+  window.addEventListener('resize', reset);
+  window.addEventListener('load', reset);
   document.addEventListener('DOMContentLoaded', queue);
-  [0, 300, 900, 2000, 4000].forEach(function (t) { setTimeout(queue, t); });
+  [0, 300, 900, 2000, 4000].forEach(function (t) { setTimeout(reset, t); });
+  // The hero is injected a moment after this runs: pick its colour up the frame it lands.
+  if (window.MutationObserver) {
+    var start = function () {
+      if (!document.body) return;
+      var mo = new MutationObserver(reset);
+      mo.observe(document.body, { childList: true, subtree: true });
+      mo.observe(document.body, { attributes: true, attributeFilter: ['class'] }); // the bundles reveal the page by a body class
+      setTimeout(function () { mo.disconnect(); }, 8000);
+    };
+    if (document.body) start(); else document.addEventListener('DOMContentLoaded', start);
+  }
+  queue();
 })();

@@ -616,6 +616,13 @@ a { text-decoration: none; color: inherit; }
   .press-chip { padding: 15px 16px; }
 }
 
+/* Wide, short touch screens: an open iPhone Duo is 951 x 543 in Safari, and small tablets in
+   landscape land here too (Thomas, Nov 12 2026). The three-card rows stay three across
+   instead of stacking. */
+@media (min-width: 860px) and (max-width: 1100px) {
+  .why-grid, .aud-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: none; margin: 0; }
+}
+
 /* ≤991px — mobile nav, values from fs-combined.js */
 @media (max-width: 991px) {
   /* Like the live homepage: no device mockup in the hero on mobile
